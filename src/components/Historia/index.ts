@@ -1,0 +1,1 @@
+export { Historia } from "./Historia.component";

@@ -1,0 +1,1 @@
+export { Documentos } from "./Documentos.component";

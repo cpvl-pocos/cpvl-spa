@@ -1,0 +1,1 @@
+export { EspacoAereo } from "./EspacoAereo.component";

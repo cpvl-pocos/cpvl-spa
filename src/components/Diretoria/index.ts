@@ -1,0 +1,1 @@
+export { Diretoria } from "./Diretoria.component";

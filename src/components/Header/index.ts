@@ -1,0 +1,1 @@
+export { Header, navLinks } from "./Header.component";
