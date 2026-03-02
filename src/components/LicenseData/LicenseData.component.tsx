@@ -226,9 +226,9 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
   }
 
   return (
-    <div className="p-2 sm:p-4 space-y-8 animate-in fade-in duration-500">
+    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 animate-in fade-in duration-500">
       {/* Dynamic Header */}
-      <div className="relative overflow-hidden bg-slate-900 rounded-[2rem] p-8 text-white shadow-2xl">
+      <div className="relative overflow-hidden bg-slate-900 rounded-[2rem] p-6 sm:p-8 text-white shadow-2xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32" />
         <div className="relative z-10 space-y-4">
           <div className="flex items-center justify-between">
@@ -277,8 +277,8 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* General Info Card */}
-        <Card className="rounded-[2.5rem] border-none shadow-[0_20px_50px_rgba(0,0,0,0.04)] bg-white/80 backdrop-blur-xl p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card className="rounded-[2.5rem] border-none shadow-[0_20px_50px_rgba(0,0,0,0.04)] bg-white/80 backdrop-blur-xl p-4 sm:p-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
             <div className="space-y-3">
               <div className="flex items-center justify-between px-1">
                 <Label htmlFor="civl" className="font-black text-slate-700 uppercase tracking-widest text-[10px]">CIVL ID Global</Label>
@@ -324,11 +324,11 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
           </div>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
           {/* CBVL Card */}
           <Card className="rounded-[2.5rem] border-none shadow-[0_20px_50px_rgba(0,0,0,0.04)] bg-white/80 backdrop-blur-xl overflow-hidden group">
             <div className="h-1.5 w-full bg-primary/20 group-hover:bg-primary transition-all duration-500" />
-            <div className="p-8 space-y-6">
+            <div className="p-6 sm:p-8 space-y-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
                   <IdCard size={24} />
@@ -401,7 +401,7 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
           {/* ANAC Card */}
           <Card className="rounded-[2.5rem] border-none shadow-[0_20px_50px_rgba(0,0,0,0.04)] bg-white/80 backdrop-blur-xl overflow-hidden group">
             <div className="h-1.5 w-full bg-slate-200 group-hover:bg-slate-400 transition-all duration-500" />
-            <div className="p-8 space-y-6">
+            <div className="p-6 sm:p-8 space-y-6">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600 shadow-inner">
                   <FileText size={24} />
@@ -472,34 +472,34 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
           </Card>
         </div>
 
-        <div className="flex flex-col-reverse sm:flex-row gap-4 pt-8 border-t border-slate-100">
-          <div className="flex gap-3 flex-1">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClear}
-              disabled={isSubmitting}
-              className="flex-1 rounded-2xl h-14 font-black border-slate-200 text-slate-500 hover:text-primary hover:bg-primary/5"
-            >
-              <Eraser className="mr-2 h-4 w-4" />
-              Limpar Campos
-            </Button>
+        <div className="flex flex-col sm:flex-row gap-4 pt-4 sm:pt-8 border-t border-slate-100">
+          <div className="flex flex-col sm:flex-row gap-3 flex-1 order-2 sm:order-1">
             {onClose && (
               <Button
                 type="button"
                 variant="ghost"
                 onClick={onClose}
                 disabled={isSubmitting}
-                className="flex-1 rounded-2xl h-14 font-black text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+                className="w-full sm:flex-1 rounded-2xl h-14 font-black text-slate-400 hover:text-slate-600 hover:bg-slate-100 order-2 sm:order-1"
               >
                 Voltar
               </Button>
             )}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClear}
+              disabled={isSubmitting}
+              className="w-full sm:flex-1 rounded-2xl h-14 font-black border-slate-200 text-slate-500 hover:text-primary hover:bg-primary/5 order-1 sm:order-2"
+            >
+              <Eraser className="mr-2 h-4 w-4" />
+              Limpar Campos
+            </Button>
           </div>
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="flex-1 sm:max-w-[240px] rounded-2xl h-14 font-black text-lg shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full sm:flex-1 sm:max-w-[240px] rounded-2xl h-14 font-black text-lg shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] order-1 sm:order-2"
           >
             {isSubmitting ? (
               <>

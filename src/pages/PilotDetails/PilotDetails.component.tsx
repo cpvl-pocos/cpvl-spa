@@ -252,7 +252,7 @@ export const PilotDetails = () => {
       <div className="flex flex-row items-center justify-center gap-4">
         <div>
           <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-            <DialogContent className="sm:max-w-md rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
+            <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
               {pilot && (
                 <EditProfile
                   userId={pilot.userId}
@@ -265,7 +265,7 @@ export const PilotDetails = () => {
 
         <div>
           <Dialog open={isEmergencyContactOpen} onOpenChange={setIsEmergencyContactOpen}>
-            <DialogContent className="sm:max-w-md rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
+            <DialogContent className="sm:max-w-3xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
               {pilot && (
                 <EmergencyContact
                   userId={pilot.userId}
@@ -278,7 +278,7 @@ export const PilotDetails = () => {
 
         <div>
           <Dialog open={isLicenseDataOpen} onOpenChange={setIsLicenseDataOpen}>
-            <DialogContent className="sm:max-w-md rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
+            <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
               {pilot && (
                 <LicenseData
                   userId={pilot.userId}

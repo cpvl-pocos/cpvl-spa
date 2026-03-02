@@ -11,12 +11,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { IMaskInput } from 'react-imask';
 import { useFetch } from '@/hooks';
 import { API, getURI } from '@/services';
 import { cn } from '@/lib/utils';
-import { Save, Eraser, Info } from 'lucide-react';
+import { Save, Eraser, Info, HeartPulse, CheckCircle2, AlertCircle } from 'lucide-react';
 
 interface IEmergencyContact {
   id?: number;
@@ -59,7 +60,7 @@ const PhoneMaskCustom = React.forwardRef<HTMLInputElement, CustomProps>(
         mask="(00) 00000-0000"
         inputRef={ref}
         className={cn(
-          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "flex h-12 w-full rounded-2xl border border-slate-100 bg-white px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 font-bold shadow-sm",
           props.disabled && "bg-muted"
         )}
         onAccept={(value: any) =>
@@ -193,131 +194,143 @@ export const EmergencyContact: React.FC<EmergencyContactProps> = ({
   }
 
   return (
-    <div className="p-4 sm:p-6 space-y-6">
-      <div className="space-y-1">
-        <h2 className="text-2xl font-bold tracking-tight text-primary">
-          Contato de Emergência
-        </h2>
-        {displayName && (
-          <p className="text-sm font-medium text-muted-foreground">
-            {displayName}
-          </p>
-        )}
+    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 animate-in fade-in duration-500">
+      {/* Dynamic Header */}
+      <div className="relative overflow-hidden bg-slate-900 rounded-[2rem] p-6 sm:p-8 text-white shadow-2xl">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/20 rounded-full blur-3xl -mr-32 -mt-32" />
+        <div className="relative z-10 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl">
+              <HeartPulse size={28} className="text-red-400" />
+            </div>
+          </div>
+          <div>
+            <h2 className="text-3xl font-black tracking-tight font-['Flamenco']">Contato de Emergência</h2>
+            <p className="text-slate-400 font-bold text-sm tracking-wide">
+              {displayName ? `Piloto: ${displayName}` : 'Gerenciamento de contatos'}
+            </p>
+          </div>
+        </div>
       </div>
 
       {(formError || successMessage) && (
         <div className="space-y-4">
           {formError && (
-            <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-1">
-              <AlertDescription>{formError}</AlertDescription>
+            <Alert variant="destructive" className="rounded-2xl border-none shadow-xl bg-red-50 text-red-600">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="font-bold">{formError}</AlertDescription>
             </Alert>
           )}
           {successMessage && (
-            <Alert className="border-green-500/50 bg-green-500/10 text-green-600 dark:text-green-400 animate-in fade-in slide-in-from-top-1">
-              <AlertDescription>{successMessage}</AlertDescription>
+            <Alert className="rounded-2xl border-none shadow-xl bg-green-50 text-green-600">
+              <CheckCircle2 className="h-4 w-4" />
+              <AlertDescription className="font-bold">{successMessage}</AlertDescription>
             </Alert>
           )}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="bloodType">Tipo Sanguíneo</Label>
-            <Select
-              value={formState.bloodType}
-              onValueChange={handleSelectChange}
-            >
-              <SelectTrigger id="bloodType" className="w-full">
-                <SelectValue placeholder="Selecione o tipo sanguíneo" />
-              </SelectTrigger>
-              <SelectContent>
-                {BLOOD_TYPES.map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="emergencyPhone">Telefone de Emergência</Label>
-            <PhoneMaskCustom
-              id="emergencyPhone"
-              name="emergencyPhone"
-              value={formState.emergencyPhone || ''}
-              onChange={handleChange as any}
-              placeholder="(00) 00000-0000"
-            />
-          </div>
-
-          <div className="md:col-span-2 space-y-2">
-            <Label htmlFor="emergencyContactName">Nome do Contato de Emergência</Label>
-            <Input
-              id="emergencyContactName"
-              name="emergencyContactName"
-              value={formState.emergencyContactName || ''}
-              onChange={handleChange}
-              placeholder="Ex: Nome da esposa, pai, etc."
-            />
-          </div>
-
-          <div className="md:col-span-2 space-y-2">
-            <div className="flex items-center gap-2">
-              <Label htmlFor="allergies">Alergias / Medicamentos Alérgicos</Label>
-              <Info size={14} className="text-muted-foreground" />
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <Card className="rounded-[2.5rem] border-none shadow-[0_20px_50px_rgba(0,0,0,0.04)] bg-white/80 backdrop-blur-xl p-4 sm:p-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8">
+            <div className="space-y-3">
+              <Label htmlFor="bloodType" className="font-black text-slate-700 uppercase tracking-widest text-[10px] px-1">Tipo Sanguíneo</Label>
+              <Select
+                value={formState.bloodType}
+                onValueChange={handleSelectChange}
+              >
+                <SelectTrigger id="bloodType" className="h-12 rounded-2xl bg-white border-slate-100 shadow-sm focus:ring-primary/20 font-bold">
+                  <SelectValue placeholder="Selecione o tipo" />
+                </SelectTrigger>
+                <SelectContent className="rounded-2xl border-slate-100 shadow-2xl">
+                  {BLOOD_TYPES.map((type) => (
+                    <SelectItem key={type} value={type} className="rounded-xl font-bold py-3">
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-            <Textarea
-              id="allergies"
-              name="allergies"
-              rows={4}
-              value={formState.allergies || ''}
-              onChange={handleChange}
-              placeholder="Descreva aqui se possui alguma alergia ou medicamentos que não pode tomar"
-              className="resize-none"
-            />
-          </div>
-        </div>
 
-        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t">
-          <div className="flex gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClear}
-              disabled={isSubmitting}
-              className="flex-1 sm:flex-none"
-            >
-              <Eraser className="mr-2 h-4 w-4" />
-              Limpar
-            </Button>
+            <div className="space-y-3">
+              <Label htmlFor="emergencyPhone" className="font-black text-slate-700 uppercase tracking-widest text-[10px] px-1">Telefone de Emergência</Label>
+              <PhoneMaskCustom
+                id="emergencyPhone"
+                name="emergencyPhone"
+                value={formState.emergencyPhone || ''}
+                onChange={handleChange as any}
+                placeholder="(00) 00000-0000"
+              />
+            </div>
+
+            <div className="md:col-span-2 space-y-3">
+              <Label htmlFor="emergencyContactName" className="font-black text-slate-700 uppercase tracking-widest text-[10px] px-1">Nome do Contato de Emergência</Label>
+              <Input
+                id="emergencyContactName"
+                name="emergencyContactName"
+                value={formState.emergencyContactName || ''}
+                onChange={handleChange}
+                placeholder="Ex: Nome da esposa, pai, etc."
+                className="h-12 rounded-2xl bg-white border-slate-100 shadow-sm focus:ring-primary/20 font-bold"
+              />
+            </div>
+
+            <div className="md:col-span-2 space-y-3">
+              <div className="flex items-center gap-2 px-1">
+                <Label htmlFor="allergies" className="font-black text-slate-700 uppercase tracking-widest text-[10px]">Alergias / Medicamentos Alérgicos</Label>
+                <Info size={14} className="text-slate-400" />
+              </div>
+              <Textarea
+                id="allergies"
+                name="allergies"
+                rows={4}
+                value={formState.allergies || ''}
+                onChange={handleChange}
+                placeholder="Descreva aqui se possui alguma alergia ou medicamentos que não pode tomar"
+                className="resize-none rounded-2xl bg-white border-slate-100 shadow-sm focus:ring-primary/20 font-bold p-4"
+              />
+            </div>
+          </div>
+        </Card>
+
+        <div className="flex flex-col sm:flex-row gap-4 pt-4 sm:pt-8 border-t border-slate-100">
+          <div className="flex flex-col sm:flex-row gap-3 flex-1 order-2 sm:order-1">
             {onClose && (
               <Button
                 type="button"
                 variant="ghost"
                 onClick={onClose}
                 disabled={isSubmitting}
-                className="flex-1 sm:flex-none sm:w-32"
+                className="w-full sm:flex-1 rounded-2xl h-14 font-black text-slate-400 hover:text-slate-600 hover:bg-slate-100 order-2 sm:order-1"
               >
                 Cancelar
               </Button>
             )}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleClear}
+              disabled={isSubmitting}
+              className="w-full sm:flex-1 rounded-2xl h-14 font-black border-slate-200 text-slate-500 hover:text-primary hover:bg-primary/5 order-1 sm:order-2"
+            >
+              <Eraser className="mr-2 h-4 w-4" />
+              Limpar
+            </Button>
           </div>
           <Button
             type="submit"
-            className="sm:ml-auto sm:w-40 font-bold"
             disabled={isSubmitting}
+            className="w-full sm:flex-1 sm:max-w-[240px] rounded-2xl h-14 font-black text-lg shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] order-1 sm:order-2"
           >
             {isSubmitting ? (
               <>
-                <Spinner className="mr-2 h-4 w-4" />
-                Salvando...
+                <Spinner className="mr-3 h-5 w-5" />
+                SALVANDO...
               </>
             ) : (
               <>
-                <Save className="mr-2 h-4 w-4" />
-                Salvar Dados
+                <Save className="mr-3 h-5 w-5" />
+                SALVAR DADOS
               </>
             )}
           </Button>

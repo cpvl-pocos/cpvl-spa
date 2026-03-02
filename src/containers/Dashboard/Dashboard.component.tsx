@@ -132,7 +132,7 @@ export const Dashboard = () => {
 
       {/* Modals */}
       <Dialog open={openEmergencyModal} onOpenChange={setOpenEmergencyModal}>
-        <DialogContent className="sm:max-w-md rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl">
+        <DialogContent className="sm:max-w-3xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl">
           {userData && (
             <EmergencyContact
               userId={userData.id}
@@ -144,7 +144,7 @@ export const Dashboard = () => {
       </Dialog>
 
       <Dialog open={openEditProfileModal} onOpenChange={setOpenEditProfileModal}>
-        <DialogContent className="sm:max-w-md rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
+        <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
           {userData && (
             <EditProfile
               userId={userData.id}
@@ -155,7 +155,7 @@ export const Dashboard = () => {
       </Dialog>
 
       <Dialog open={openLicenseModal} onOpenChange={setOpenLicenseModal}>
-        <DialogContent className="sm:max-w-md rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl">
+        <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
           {userData && (
             <LicenseData
               userId={userData.id}
