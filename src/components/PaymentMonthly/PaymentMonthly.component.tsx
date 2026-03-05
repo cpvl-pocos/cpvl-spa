@@ -116,7 +116,6 @@ export const PaymentMonthly: React.FC<PaymentMonthlyProps> = ({
   // Somente busca piloto se não foi fornecido inicialmente
   const {
     data: pilotDataResult,
-    error: pilotError,
     loading: pilotLoading
   } = useFetch<any>({
     url: getURI(`${API.pilots}/${userId}`),
