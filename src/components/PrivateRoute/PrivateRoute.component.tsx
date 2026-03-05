@@ -1,8 +1,8 @@
 import { Outlet, Navigate } from 'react-router-dom';
-import { useLocalStorage } from 'usehooks-ts';
+import { useSessionStorage } from 'usehooks-ts';
 
 export const PrivateRoutes = () => {
-  const [isLogged] = useLocalStorage(
+  const [isLogged] = useSessionStorage(
     import.meta.env.VITE_LOGGED_KEY || 'CPVL_USER_IS_LOGGED',
     false
   );

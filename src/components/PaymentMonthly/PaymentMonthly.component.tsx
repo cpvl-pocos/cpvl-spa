@@ -50,14 +50,25 @@ import {
   TrendingUp
 } from 'lucide-react';
 import { useFetch } from '@/hooks';
+import { useAuth } from '@/context/AuthContext';
 import { API, getURI } from '@/services';
 import { PaymentQRCode } from '../PaymentQRCode';
 import type { IPaymentMonthly } from '@/types';
 import { cn } from '@/lib/utils';
 
-export const PaymentMonthly = () => {
+interface PaymentMonthlyProps {
+  initialPayments?: IPaymentMonthly[];
+  initialPilotData?: any;
+}
+
+export const PaymentMonthly: React.FC<PaymentMonthlyProps> = ({
+  initialPayments,
+  initialPilotData
+}) => {
   const { userId } = useParams<{ userId: string }>();
-  const [payments, setPayments] = useState<IPaymentMonthly[]>([]);
+  const [payments, setPayments] = useState<IPaymentMonthly[]>(
+    initialPayments || []
+  );
   const [selectedYear, setSelectedYear] = useState<string>(
     new Date().getFullYear().toString()
   );
@@ -70,7 +81,8 @@ export const PaymentMonthly = () => {
     year: string;
     month: number;
   } | null>(null);
-  const [actualConfirmingBatch, setActualConfirmingBatch] = useState<IPaymentMonthly[] | null>(null);
+  const [actualConfirmingBatch, setActualConfirmingBatch] =
+    useState<IPaymentMonthly[] | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [openBatchModal, setOpenBatchModal] = useState(false);
 
@@ -86,9 +98,8 @@ export const PaymentMonthly = () => {
 
   const apiUrl = buildApiUrl();
 
-  const { data: userData } = useFetch<any>({
-    url: getURI(API.me)
-  });
+  const { profile } = useAuth();
+  const userData = profile?.user;
   const isAdmin = userData && userData.role === 'admin';
 
   const {
@@ -98,24 +109,21 @@ export const PaymentMonthly = () => {
     doFetch: reFetchPayments
   } = useFetch<IPaymentMonthly[]>({
     method: 'GET',
-    url: apiUrl
+    url: apiUrl,
+    immediate: (!initialPayments && !!isUserIdValid) as boolean
   });
 
-  const handlePaymentSuccess = () => {
-    setOpenModal(false);
-    reFetchPayments({ url: apiUrl });
-  };
-
-  const { data: pilotData, loading: loadingPilot } = useFetch<any>({
-    method: 'GET',
-    url: isUserIdValid ? getURI(`${API.pilots}/${userId}`) : ''
+  // Somente busca piloto se não foi fornecido inicialmente
+  const {
+    data: pilotDataResult,
+    error: pilotError,
+    loading: pilotLoading
+  } = useFetch<any>({
+    url: getURI(`${API.pilots}/${userId}`),
+    immediate: (!initialPilotData && !!isUserIdValid) as boolean
   });
 
-  const { doFetch: doConfirm } = useFetch<IPaymentMonthly>({ method: 'PATCH' });
-
-  useEffect(() => {
-    setSelectedYear(new Date().getFullYear().toString());
-  }, []);
+  const pilot = initialPilotData || pilotDataResult;
 
   useEffect(() => {
     if (paymentsData) {
@@ -124,6 +132,23 @@ export const PaymentMonthly = () => {
       setPayments([]);
     }
   }, [paymentsData, paymentsError]);
+
+  useEffect(() => {
+    if (initialPayments) {
+      setPayments(initialPayments);
+    }
+  }, [initialPayments]);
+
+  const handlePaymentSuccess = () => {
+    setOpenModal(false);
+    reFetchPayments({ url: apiUrl });
+  };
+
+  const { doFetch: doConfirm } = useFetch<IPaymentMonthly>({ method: 'PATCH' });
+
+  useEffect(() => {
+    setSelectedYear(new Date().getFullYear().toString());
+  }, []);
 
   const handleSwitchClick = (year: string, month: number) => {
     setConfirmingMonth({ year, month });
@@ -443,7 +468,7 @@ export const PaymentMonthly = () => {
     );
   }
 
-  if (loadingPilot || paymentsLoading) {
+  if (pilotLoading || paymentsLoading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[400px] gap-4">
         <Spinner className="h-12 w-12 text-primary" />
@@ -455,7 +480,7 @@ export const PaymentMonthly = () => {
   }
 
   const isPilotFiliado =
-    ((pilotData && pilotData.status) || '').toLowerCase() === 'filiado';
+    ((pilot && pilot.status) || '').toLowerCase() === 'filiado';
 
   if (!isPilotFiliado) {
     return (
@@ -468,7 +493,7 @@ export const PaymentMonthly = () => {
             disponíveis para pilotos com o status <strong className="text-primary">filiado</strong>. O
             status atual deste piloto é:{' '}
             <Badge variant="outline" className="ml-1">
-              {(pilotData && pilotData.status) || 'Não identificado'}
+              {(pilot && pilot.status) || 'Não identificado'}
             </Badge>
           </AlertDescription>
         </Alert>

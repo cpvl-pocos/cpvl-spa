@@ -94,7 +94,8 @@ export const Signup: React.FC = () => {
     setFormError(error!.message || 'Erro ao criar usuário');
   }, [error]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     setErrors([]);
     setFormError(undefined);
     setSuccessMessage(undefined);
@@ -256,17 +257,17 @@ export const Signup: React.FC = () => {
 
           <CardContent className="space-y-4">
             {formError && (
-              <div className="flex items-center gap-3 rounded-lg border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-200 animate-shake">
-                <AlertDescription>{formError}</AlertDescription>
+              <div className="flex items-center gap-3 rounded-xl border border-red-500/50 bg-red-500/20 backdrop-blur-md p-4 text-sm text-white shadow-xl animate-shake">
+                <AlertDescription className="text-white">{formError}</AlertDescription>
               </div>
             )}
             {successMessage && (
-              <div className="flex items-center gap-3 rounded-lg border border-green-500/50 bg-green-500/10 p-3 text-sm text-green-200">
-                <AlertDescription>{successMessage}</AlertDescription>
+              <div className="flex items-center gap-3 rounded-xl border border-green-500/50 bg-green-500/20 backdrop-blur-md p-4 text-sm text-white font-black shadow-xl">
+                <AlertDescription className="text-white">{successMessage}</AlertDescription>
               </div>
             )}
 
-            <form action={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name" className="text-white/80 text-sm font-medium ml-1">Nome completo</Label>
                 <Input
@@ -444,8 +445,8 @@ export const Signup: React.FC = () => {
               {errors.length > 0 && (
                 <div className="mt-2 space-y-2">
                   {errors.map((err, i) => (
-                    <div key={i} className="flex items-center gap-3 rounded-lg border border-red-500/50 bg-red-500/10 p-2 text-xs text-red-200 animate-shake">
-                      <AlertDescription>{err}</AlertDescription>
+                    <div key={i} className="flex items-center gap-3 rounded-xl border border-red-500/50 bg-red-500/20 backdrop-blur-md p-3 text-xs text-white shadow-lg animate-shake">
+                      <AlertDescription className="text-white">{err}</AlertDescription>
                     </div>
                   ))}
                 </div>

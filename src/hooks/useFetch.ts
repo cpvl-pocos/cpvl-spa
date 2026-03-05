@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocalStorage } from './useLocalStorage';
+import { useSessionStorage } from 'usehooks-ts';
 import { getHeaderOptions } from '../services';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +8,7 @@ interface IProps {
   url?: string;
   body?: any;
   options?: RequestInit;
+  immediate?: boolean;
 }
 
 interface FetchError extends Error {
@@ -15,13 +16,13 @@ interface FetchError extends Error {
   response?: any;
 }
 
-const useFetch = <T>({ method = 'GET', url, body, options }: IProps) => {
+const useFetch = <T>({ method = 'GET', url, body, options, immediate = true }: IProps) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<FetchError | null>(null);
 
-  const [, setIsLogged] = useLocalStorage(
-    (import.meta.env.VITE_LOGGED_KEY || 'APP_LOGGED') as string,
+  const [, setIsLogged] = useSessionStorage(
+    (import.meta.env.VITE_LOGGED_KEY || 'CPVL_USER_IS_LOGGED') as string,
     false
   );
   const navigate = useNavigate();
@@ -100,7 +101,7 @@ const useFetch = <T>({ method = 'GET', url, body, options }: IProps) => {
 
   // efeito inicial caso `url` seja passado direto
   useEffect(() => {
-    if (url) {
+    if (url && (immediate !== false)) {
       doFetch({ url, body, method });
     }
     return () => {
@@ -109,7 +110,7 @@ const useFetch = <T>({ method = 'GET', url, body, options }: IProps) => {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, body, method]);
+  }, [url, body, method, immediate]);
 
   return { doFetch, data, error, loading, clearError };
 };

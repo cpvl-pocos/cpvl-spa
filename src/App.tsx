@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PrivateRoutes } from "@/components/PrivateRoute/";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router";
+import { Routes, Route } from "react-router-dom";
 import NotFound from "./pages/NotFound.tsx";
 import { Login } from "./pages/login/";
 import { Signup } from "./pages/signup";
@@ -24,13 +24,15 @@ import { Header } from "./components/Header/";
 import { Historia } from "./components/Historia/";
 import { Home } from "./pages/Home/";
 
+import { AuthProvider } from "./context/AuthContext";
+
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <BrowserRouter>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/header" element={<Header />} />
@@ -70,8 +72,8 @@ const App = () => (
 
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

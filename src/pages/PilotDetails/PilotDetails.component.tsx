@@ -12,10 +12,10 @@ import {
   Settings
 } from 'lucide-react';
 import { useFetch } from '@/hooks';
+import { useAuth } from '@/context/AuthContext';
 import { API, getURI } from '@/services';
 import { PaymentMonthly } from '@/components/PaymentMonthly';
 import { StatusPilot } from '@/components/StatusPilot';
-import type { IAllowedRoutes } from '@/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -38,6 +38,9 @@ interface IPilotDetails {
   email: string;
   status: string;
   photoUrl?: string;
+  paymentMonthlies?: any[];
+  emergencyContact?: any;
+  licenseData?: any;
 }
 
 
@@ -58,12 +61,7 @@ export const PilotDetails = () => {
     url: getURI(`${API.pilots}/${userId}`)
   });
 
-  const { data: profile } = useFetch<{
-    routes: IAllowedRoutes[];
-    warnings: string[];
-  }>({
-    url: getURI(API.profile)
-  });
+  const { profile } = useAuth();
   const allowedRoutes = profile && profile.routes;
 
   const isAdmin =
@@ -243,7 +241,10 @@ export const PilotDetails = () => {
             </CardHeader>
             <CardContent className="p-0">
               <div className="p-2 sm:p-4">
-                <PaymentMonthly />
+                <PaymentMonthly
+                  initialPayments={pilot.paymentMonthlies}
+                  initialPilotData={pilot}
+                />
               </div>
             </CardContent>
           </Card>

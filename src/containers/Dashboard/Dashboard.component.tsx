@@ -1,10 +1,9 @@
 // src/containers/Dashboard/Dashboard.component.tsx
 import { useCallback, useEffect, useState } from 'react';
-import { useLocalStorage } from 'usehooks-ts';
+import { useSessionStorage } from 'usehooks-ts';
 import MainNav from '../../components/MainNav';
-import { API, getURI } from '../../services';
 import type { IAllowedRoutes } from '../../types';
-import { useFetch } from '../../hooks';
+import { useAuth } from '@/context/AuthContext';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { StatusList } from '../../pages/StatusList';
 import { EmergencyContact } from '../../components/EmergencyContact';
@@ -19,34 +18,21 @@ export const DashboardHome = () => {
 };
 
 export const Dashboard = () => {
+  const { profile } = useAuth();
+  const allowedRoutes = profile?.routes;
+  const warnings = profile?.warnings;
+  const userData = profile?.user;
+  const pilotInfo = profile?.pilotInfo;
+
   const [openEmergencyModal, setOpenEmergencyModal] = useState(false);
   const [openEditProfileModal, setOpenEditProfileModal] = useState(false);
   const [openLicenseModal, setOpenLicenseModal] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const { data: profile } = useFetch<{
-    routes: IAllowedRoutes[];
-    warnings: string[];
-  }>({
-    url: getURI(API.profile)
-  });
-  const allowedRoutes = profile && profile.routes;
-  const warnings = profile && profile.warnings;
-  const { data: userData } = useFetch<any>({
-    url: getURI(API.me)
-  });
-
-  const [, setIsLogged] = useLocalStorage(
+  const [, setIsLogged] = useSessionStorage(
     import.meta.env.VITE_LOGGED_KEY || 'CPVL_USER_IS_LOGGED',
     false
   );
-
-  const { data: pilotInfo } = useFetch<any>({
-    url:
-      userData && userData.id
-        ? getURI(`${API.pilots}/${userData.id}`)
-        : undefined
-  });
 
   const navigate = useNavigate();
 
@@ -92,7 +78,12 @@ export const Dashboard = () => {
       window.location.pathname === '/dashboard/'
     ) {
       if (allowedRoutes && allowedRoutes.length > 0) {
-        navigate(`/dashboard/${allowedRoutes[0].route}`, { replace: true });
+        // Encontra a primeira rota que não seja modal
+        const firstRoute = allowedRoutes.find(r =>
+          !['emergency-contact', 'edit-profile', 'license-data'].includes(r.route)
+        ) || allowedRoutes[0];
+
+        navigate(`/dashboard/${firstRoute.route}`, { replace: true });
       }
     }
   }, [allowedRoutes, navigate]);

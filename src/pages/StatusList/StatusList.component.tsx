@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Phone, Users, Calendar, MapPin } from 'lucide-react';
 import { useFetch } from '@/hooks';
+import { useAuth } from '@/context/AuthContext';
 import { API, getURI } from '@/services';
 import { SearchField } from '@/components/SearchField';
-import type { IAllowedRoutes } from '@/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Table,
@@ -57,12 +57,7 @@ export const StatusList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { data } = useFetch<IPilot[]>({ url: getURI(API.status) });
 
-  const { data: profile } = useFetch<{
-    routes: IAllowedRoutes[];
-    warnings: string[];
-  }>({
-    url: getURI(API.profile)
-  });
+  const { profile } = useAuth();
   const allowedRoutes = profile && profile.routes;
 
   const isAdmin =

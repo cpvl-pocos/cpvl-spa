@@ -1,18 +1,15 @@
 // src/pages/EmergencyContactPage/EmergencyContactPage.component.tsx
 import React from 'react';
 import { ShieldAlert, AlertCircle } from 'lucide-react';
-import { useFetch } from '@/hooks';
-import { API, getURI } from '@/services';
+import { useAuth } from '@/context/AuthContext';
 import { EmergencyContact } from '@/components/EmergencyContact';
 import { Card, CardContent } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export const EmergencyContactPage: React.FC = () => {
-  const { data: user, loading } = useFetch<any>({
-    url: getURI(API.me),
-    method: 'GET'
-  });
+  const { profile, loading } = useAuth();
+  const user = profile?.user;
 
   if (loading) {
     return (

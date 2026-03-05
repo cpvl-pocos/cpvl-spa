@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useSessionStorage } from 'usehooks-ts';
 import { Users, Lock, Mail, ArrowLeft, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import useFetch from "@/hooks/useFetch";
+import { useAuth } from "@/context/AuthContext";
 import { API, getURI } from "@/services/getURI";
 import bgImage from "@/assets/images/hero_01.jpg";
 
@@ -14,11 +15,12 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [isLogged, setIsLogged] = useLocalStorage(
+  const [isLogged, setIsLogged] = useSessionStorage(
     (import.meta.env.VITE_LOGGED_KEY || "CPVL_USER_IS_LOGGED") as string,
     false
   );
   const [isForgotLoading, setIsForgotLoading] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [feedback, setFeedback] = useState<{
     message: string;
     type: "success" | "error" | "info";
@@ -34,19 +36,30 @@ export const Login = () => {
     }
   }, [isLogged, navigate]);
 
-  const handleLogin = async () => {
+  const { refreshProfile } = useAuth();
+
+  const handleLogin = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     console.log('Login attempt with:', { email, password });
+    setIsLoggingIn(true);
     clearError();
     setFeedback(null);
 
-    const result = await doFetch({
-      url: getURI(API.login),
-      body: { username: email, password },
-    });
+    try {
+      const result = await doFetch({
+        url: getURI(API.login),
+        body: { username: email.trim(), password },
+      });
 
-    if (result) {
-      setIsLogged(true);
-      navigate("/dashboard");
+      if (result) {
+        setIsLogged(true);
+        await refreshProfile();
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
@@ -130,7 +143,7 @@ export const Login = () => {
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <form id="login-form" action={handleLogin} className="space-y-4">
+            <form id="login-form" onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-white/80 text-sm font-medium ml-1">Usuário ou E-mail</Label>
                 <div className="relative group">
@@ -177,33 +190,33 @@ export const Login = () => {
               </div>
 
               {error && (
-                <div className="flex items-center gap-3 rounded-lg border border-red-500/50 bg-red-500/10 p-3 text-sm text-red-200 animate-shake">
-                  <AlertCircle size={18} className="shrink-0" />
-                  <p>{error.message || "Erro ao realizar login. Verifique suas credenciais."}</p>
+                <div className="flex items-center gap-3 rounded-xl border border-red-500/50 bg-red-500/20 backdrop-blur-md p-4 text-sm text-white shadow-xl animate-shake">
+                  <AlertCircle size={20} className="shrink-0 text-white" />
+                  <p className="text-white">{error.message || "Erro ao realizar login. Verifique suas credenciais."}</p>
                 </div>
               )}
 
               {feedback && (
-                <div className={`flex items-center gap-3 rounded-lg border p-3 text-sm animate-fade-in ${feedback.type === "success"
-                  ? "border-green-500/50 bg-green-500/10 text-green-200"
+                <div className={`flex items-center gap-3 rounded-xl border p-4 text-sm shadow-xl backdrop-blur-md animate-fade-in ${feedback.type === "success"
+                  ? "border-green-500/50 bg-green-500/20 text-white"
                   : feedback.type === "error"
-                    ? "border-red-500/50 bg-red-500/10 text-red-200"
-                    : "border-blue-500/50 bg-blue-500/10 text-blue-200"
+                    ? "border-red-500/50 bg-red-500/20 text-white"
+                    : "border-blue-500/50 bg-blue-500/20 text-white"
                   }`}>
                   <AlertCircle size={18} className="shrink-0" />
-                  <p>{feedback.message}</p>
+                  <p className="text-white">{feedback.message}</p>
                 </div>
               )}
 
               <Button
                 type="submit"
-                disabled={loading}
+                disabled={isLoggingIn || loading}
                 className="w-full h-12 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-300 active:scale-[0.98] cursor-pointer"
               >
-                {loading ? (
+                {isLoggingIn || loading ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Entrando...
+                    Verificando credenciais...
                   </>
                 ) : (
                   "Entrar no Sistema"
