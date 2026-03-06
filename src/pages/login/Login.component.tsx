@@ -52,6 +52,9 @@ export const Login = () => {
       });
 
       if (result) {
+        if (result.token) {
+          localStorage.setItem('CPVL_AUTH_TOKEN', result.token);
+        }
         setIsLogged(true);
         await refreshProfile();
         navigate("/dashboard");

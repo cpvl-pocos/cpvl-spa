@@ -39,6 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = useCallback(() => {
     console.log('Logging out due to inactivity');
+    localStorage.removeItem('CPVL_AUTH_TOKEN');
     setIsLogged(false);
     setProfile(null);
     window.location.href = '/login';
