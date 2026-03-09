@@ -35,16 +35,20 @@ export const EmergencyContactPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4 md:p-8 animate-in fade-in duration-700">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-black tracking-tight text-slate-900 flex items-center gap-2">
-          <ShieldAlert className="text-primary w-8 h-8" />
-          Contato de Emergência
-        </h1>
-        <p className="text-slate-500 font-medium">Informações vitais para sua segurança durante as atividades</p>
+    <div className="flex flex-col gap-6 p-3 sm:p-6 md:p-8 animate-in fade-in duration-700">
+      <div className="sticky top-0 z-50 bg-slate-50/90 backdrop-blur-md px-4 py-3 -mx-4 border-b border-slate-100 sm:relative sm:top-auto sm:z-auto sm:mx-0 sm:px-0 sm:py-0 sm:bg-transparent sm:border-none flex items-center gap-3 sm:gap-4 transition-all duration-300">
+        <div className="p-2 sm:p-3 bg-white/80 border border-slate-100 rounded-xl shadow-sm">
+          <ShieldAlert className="text-primary w-5 h-5 sm:w-6 sm:h-6" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-xl sm:text-3xl font-black tracking-tight text-slate-900 truncate">
+            Contato de Emergência
+          </h1>
+          <p className="text-slate-500 font-medium text-[10px] sm:text-base truncate">Informações vitais para sua segurança</p>
+        </div>
       </div>
 
-      <Card className="border-none shadow-[0_20px_60px_rgba(0,0,0,0.05)] bg-white/70 backdrop-blur-xl rounded-4x1 overflow-hidden">
+      <Card className="border-none shadow-[0_10px_40px_rgba(0,0,0,0.03)] bg-white/70 backdrop-blur-xl rounded-[2rem] sm:rounded-[32px] overflow-hidden">
         <CardContent className="p-0">
           <EmergencyContact userId={user.id} />
         </CardContent>

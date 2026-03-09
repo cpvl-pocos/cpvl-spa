@@ -135,7 +135,7 @@ export const Dashboard = () => {
       </Dialog>
 
       <Dialog open={openEditProfileModal} onOpenChange={setOpenEditProfileModal}>
-        <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
+        <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-y-auto max-h-[95vh]">
           {userData && (
             <EditProfile
               userId={userData.id}
@@ -146,7 +146,7 @@ export const Dashboard = () => {
       </Dialog>
 
       <Dialog open={openLicenseModal} onOpenChange={setOpenLicenseModal}>
-        <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
+        <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-y-auto max-h-[95vh]">
           {userData && (
             <LicenseData
               userId={userData.id}

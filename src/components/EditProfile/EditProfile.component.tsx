@@ -254,191 +254,204 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   }
 
   return (
-    <div className="p-4 sm:p-6 space-y-6 sm:space-y-8 animate-in fade-in duration-500 w-full max-w-4xl mx-auto">
-      {/* Dynamic Header */}
-      <div className="relative overflow-hidden bg-slate-900 rounded-[2rem] p-6 sm:p-8 text-white shadow-2xl">
+    <div className="p-0 space-y-0 animate-in fade-in duration-500 w-full max-w-4xl mx-auto overflow-y-auto max-h-[90vh] sm:max-h-[85vh] scrollbar-thin scrollbar-thumb-slate-200">
+      {/* Dynamic Header - Refined for all sizes */}
+      <div className="relative overflow-hidden bg-slate-900 sm:rounded-[2rem] md:rounded-[2.5rem] p-4 sm:p-6 md:p-8 text-white shadow-2xl mx-0 sm:mx-0">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -mr-32 -mt-32" />
-        <div className="relative z-10 space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl">
-              <UserIcon size={28} className="text-blue-400" />
-            </div>
+        <div className="relative z-10 flex flex-col sm:flex-row sm:items-end gap-3 sm:gap-4">
+          <div className="p-2 sm:p-3 bg-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl w-fit">
+            <UserIcon size={20} className="text-blue-400 sm:w-6 sm:h-6" />
           </div>
-          <div>
-            <h2 className="text-3xl font-black tracking-tight font-['Flamenco']">Editar Cadastro</h2>
-            <p className="text-slate-400 font-bold text-sm tracking-wide">
+          <div className="space-y-0.5">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight font-['Flamenco']">Editar Cadastro</h2>
+            <p className="text-slate-400 font-bold text-[9px] sm:text-[10px] md:text-xs tracking-wide uppercase">
               {formState.name ? `Piloto: ${formState.name}` : 'Gerenciamento de perfil'}
             </p>
           </div>
         </div>
       </div>
 
-      {(formError || successMessage || errors.length > 0) && (
-        <div className="space-y-4">
-          {formError && (
-            <Alert variant="destructive" className="rounded-2xl border-none shadow-xl bg-red-50 text-red-600">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription className="font-bold">{formError}</AlertDescription>
-            </Alert>
-          )}
-          {errors.map((err, i) => (
-            <Alert key={i} variant="destructive" className="rounded-2xl border-none shadow-xl bg-red-50 text-red-600 py-3">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription className="font-bold text-xs leading-relaxed">{err}</AlertDescription>
-            </Alert>
-          ))}
-          {successMessage && (
-            <Alert className="rounded-2xl border-none shadow-xl bg-green-50 text-green-600">
-              <CheckCircle2 className="h-4 w-4" />
-              <AlertDescription className="font-bold">{successMessage}</AlertDescription>
-            </Alert>
-          )}
-        </div>
-      )}
+      <div className="px-3 sm:px-6 md:px-8 mt-4 sm:mt-6 md:-mt-8 relative z-20 space-y-6 pb-10">
+        {(formError || successMessage || errors.length > 0) && (
+          <div className="space-y-3">
+            {formError && (
+              <Alert variant="destructive" className="rounded-xl sm:rounded-2xl border-none shadow-lg bg-red-50 text-red-600 py-3">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription className="font-bold text-xs sm:text-sm">{formError}</AlertDescription>
+              </Alert>
+            )}
+            {errors.map((err, i) => (
+              <Alert key={i} variant="destructive" className="rounded-xl sm:rounded-2xl border-none shadow-lg bg-red-50 text-red-600 py-2">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription className="font-bold text-[10px] sm:text-xs leading-relaxed">{err}</AlertDescription>
+              </Alert>
+            ))}
+            {successMessage && (
+              <Alert className="rounded-xl sm:rounded-2xl border-none shadow-lg bg-green-50 text-green-600 py-3">
+                <CheckCircle2 className="h-4 w-4" />
+                <AlertDescription className="font-bold text-xs sm:text-sm">{successMessage}</AlertDescription>
+              </Alert>
+            )}
+          </div>
+        )}
 
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <Card className="rounded-[2.5rem] border-none shadow-[0_20px_50px_rgba(0,0,0,0.04)] bg-white/80 backdrop-blur-xl p-4 sm:p-8">
-          {/* Photo upload section */}
-          <div className="flex flex-col items-center space-y-5 mb-8 sm:mb-10 pb-6 sm:pb-8 border-b border-slate-100">
-            <div className="relative group">
-              <Avatar className="h-32 w-32 ring-4 ring-offset-4 ring-primary/20 bg-muted shadow-xl transition-all group-hover:scale-105">
-                <AvatarImage src={formState.photoUrl} className="object-cover" />
-                <AvatarFallback className="bg-primary/5 text-primary">
-                  <UserIcon size={48} />
-                </AvatarFallback>
-              </Avatar>
-              <div className="absolute inset-0 flex items-center justify-center bg-slate-900/60 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer backdrop-blur-sm">
-                <Camera className="text-white" size={32} />
+        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
+          <div className="space-y-6">
+            {/* Section 1: Photo & Identity */}
+            <Card className="rounded-2xl sm:rounded-[2rem] md:rounded-[3rem] border-none shadow-[0_10px_30px_rgba(0,0,0,0.04)] bg-white/95 backdrop-blur-xl p-5 sm:p-8 md:p-10 transition-all hover:shadow-[0_15px_45px_rgba(0,0,0,0.06)]">
+              <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:items-start text-center lg:text-left">
+                {/* Photo upload section */}
+                <div className="flex flex-col items-center space-y-4 shrink-0">
+                  <div className="relative group">
+                    <Avatar className="h-28 w-28 sm:h-32 sm:w-32 lg:h-40 lg:w-40 ring-4 ring-offset-4 ring-primary/5 bg-slate-50 shadow-xl transition-all duration-500 group-hover:scale-105 group-hover:ring-primary/20">
+                      <AvatarImage src={formState.photoUrl} className="object-cover" />
+                      <AvatarFallback className="bg-slate-50 text-slate-300">
+                        <UserIcon className="w-1/2 h-1/2" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-900/60 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer backdrop-blur-sm">
+                      <Camera className="text-white" size={28} />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2 w-full max-w-[200px]">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="rounded-xl h-9 sm:h-10 font-bold border-slate-100 shadow-sm bg-slate-50/50 hover:bg-white text-[10px] sm:text-xs"
+                      asChild
+                    >
+                      <label htmlFor="photo-upload" className="cursor-pointer">
+                        <Camera className="mr-2 h-4 w-4" />
+                        {formState.photoUrl ? 'Alterar Foto' : 'Adicionar Foto'}
+                      </label>
+                    </Button>
+                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" id="photo-upload" />
+
+                    {formState.photoUrl && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className="rounded-xl h-9 sm:h-10 font-bold text-destructive hover:text-destructive hover:bg-red-50 text-[10px] sm:text-xs"
+                        onClick={handleRemovePhoto}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Remover Foto
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex-1 space-y-6 text-left">
+                  <div className="space-y-1">
+                    <h3 className="text-base sm:text-lg font-black text-slate-800 tracking-tight">Identificação</h3>
+                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Informações principais do piloto</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-1 gap-5">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="font-black text-slate-500 uppercase tracking-widest text-[9px] sm:text-[10px] px-1">Nome completo</Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        value={formState.name}
+                        onChange={handleChange}
+                        placeholder="Nome completo do piloto"
+                        required
+                        className="h-12 rounded-xl sm:rounded-2xl bg-slate-50/50 border-slate-100 shadow-inner focus:bg-white transition-all font-bold text-sm text-slate-700"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="cpf" className="font-black text-slate-500 uppercase tracking-widest text-[9px] sm:text-[10px] px-1">CPF</Label>
+                      <CPFMaskCustom
+                        id="cpf"
+                        name="cpf"
+                        value={formState.cpf}
+                        onChange={handleChange as any}
+                        placeholder="000.000.000-00"
+                        disabled
+                      />
+                      <p className="text-[9px] sm:text-[10px] font-bold text-slate-400 ml-1">
+                        Campo bloqueado para segurança.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </Card>
 
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoUpload}
-              className="hidden"
-              id="photo-upload"
-            />
+            {/* Section 2: Contact */}
+            <Card className="rounded-2xl sm:rounded-[2rem] md:rounded-[2.5rem] border-none shadow-[0_10px_30px_rgba(0,0,0,0.03)] bg-white/70 backdrop-blur-xl p-5 sm:p-8 md:p-10 transition-all hover:shadow-[0_15px_40px_rgba(0,0,0,0.05)] border-t border-white/20">
+              <div className="space-y-6">
+                <div className="space-y-1">
+                  <h3 className="text-base sm:text-lg font-black text-slate-800 tracking-tight">Contato</h3>
+                  <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Onde te encontramos</p>
+                </div>
 
-            <div className="flex gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 md:gap-8">
+                  <div className="space-y-2">
+                    <Label htmlFor="cellphone" className="font-black text-slate-500 uppercase tracking-widest text-[9px] sm:text-[10px] px-1">WhatsApp / Telefone</Label>
+                    <PhoneMaskCustom
+                      id="cellphone"
+                      name="cellphone"
+                      value={formState.cellphone}
+                      onChange={handleChange as any}
+                      placeholder="(00) 00000-0000"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="font-black text-slate-500 uppercase tracking-widest text-[9px] sm:text-[10px] px-1">E-mail Pessoal</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formState.email}
+                      onChange={handleChange}
+                      placeholder="analógico@exemplo.com"
+                      required
+                      className="h-12 rounded-xl sm:rounded-2xl bg-slate-50/50 border-slate-100 shadow-inner focus:bg-white transition-all font-bold text-sm text-slate-700"
+                    />
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-slate-100">
+            {onClose && (
               <Button
                 type="button"
-                variant="outline"
-                className="rounded-xl h-10 font-bold border-slate-200 shadow-sm"
-                asChild
+                variant="ghost"
+                onClick={onClose}
+                disabled={isSubmitting}
+                className="w-full sm:w-auto sm:min-w-[140px] rounded-xl sm:rounded-2xl h-10 sm:h-12 font-black text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all active:scale-95 text-xs sm:text-sm"
               >
-                <label htmlFor="photo-upload" className="cursor-pointer">
-                  <Camera className="mr-2 h-4 w-4" />
-                  {formState.photoUrl ? 'Alterar Foto' : 'Adicionar Foto'}
-                </label>
+                DESCARTAR
               </Button>
-
-              {formState.photoUrl && (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  className="rounded-xl h-10 font-bold shadow-sm shadow-destructive/20"
-                  onClick={handleRemovePhoto}
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Remover
-                </Button>
-              )}
-            </div>
-            <p className="text-[10px] uppercase font-black tracking-widest text-slate-400">
-              Tamanho máximo: 500KB
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            <div className="space-y-3 lg:col-span-2">
-              <Label htmlFor="name" className="font-black text-slate-700 uppercase tracking-widest text-[10px] px-1">Nome completo</Label>
-              <Input
-                id="name"
-                name="name"
-                value={formState.name}
-                onChange={handleChange}
-                placeholder="Seu nome completo"
-                required
-                className="h-12 rounded-2xl bg-white border-slate-100 shadow-sm focus:ring-primary/20 font-bold"
-              />
-            </div>
-
-            <div className="space-y-3">
-              <Label htmlFor="cpf" className="font-black text-slate-700 uppercase tracking-widest text-[10px] px-1">CPF</Label>
-              <CPFMaskCustom
-                id="cpf"
-                name="cpf"
-                value={formState.cpf}
-                onChange={handleChange as any}
-                placeholder="000.000.000-00"
-                disabled
-              />
-              <p className="text-[10px] font-bold text-slate-400 ml-1">
-                O CPF não pode ser alterado.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              <Label htmlFor="cellphone" className="font-black text-slate-700 uppercase tracking-widest text-[10px] px-1">Telefone</Label>
-              <PhoneMaskCustom
-                id="cellphone"
-                name="cellphone"
-                value={formState.cellphone}
-                onChange={handleChange as any}
-                placeholder="(00) 00000-0000"
-                required
-              />
-            </div>
-
-            <div className="space-y-3">
-              <Label htmlFor="email" className="font-black text-slate-700 uppercase tracking-widest text-[10px] px-1">E-mail</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formState.email}
-                onChange={handleChange}
-                placeholder="seu@email.com"
-                required
-                className="h-12 rounded-2xl bg-white border-slate-100 shadow-sm focus:ring-primary/20 font-bold"
-              />
-            </div>
-          </div>
-        </Card>
-
-        <div className="flex flex-col sm:flex-row gap-4 pt-4 sm:pt-8 border-t border-slate-100">
-          {onClose && (
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={onClose}
-              disabled={isSubmitting}
-              className="w-full sm:w-auto sm:min-w-[120px] rounded-2xl h-14 font-black text-slate-400 hover:text-slate-600 hover:bg-slate-100 order-2 sm:order-1"
-            >
-              Cancelar
-            </Button>
-          )}
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full sm:ml-auto sm:flex-1 sm:max-w-[280px] rounded-2xl h-14 font-black text-lg shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] order-1 sm:order-2"
-          >
-            {isSubmitting ? (
-              <>
-                <Spinner className="mr-3 h-5 w-5" />
-                SALVANDO...
-              </>
-            ) : (
-              <>
-                <Save className="mr-3 h-5 w-5" />
-                SALVAR ALTERAÇÕES
-              </>
             )}
-          </Button>
-        </div>
-      </form>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full sm:ml-auto sm:flex-1 sm:max-w-[320px] rounded-xl sm:rounded-2xl h-10 sm:h-12 font-black text-sm sm:text-base shadow-xl sm:shadow-2xl shadow-primary/25 transition-all hover:scale-[1.02] active:scale-[0.98] bg-primary hover:bg-primary/90"
+            >
+              {isSubmitting ? (
+                <>
+                  <Spinner className="mr-2 h-4 w-4" />
+                  ATUALIZANDO...
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                  SALVAR ALTERAÇÕES
+                </>
+              )}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
