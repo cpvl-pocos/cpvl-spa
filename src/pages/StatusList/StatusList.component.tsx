@@ -155,7 +155,7 @@ export const StatusList = () => {
                             <div className="flex flex-col gap-1 flex-1">
                               <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-black">Alergias</span>
                               {pilot.allergies ? (
-                                <div className="text-sm font-bold text-red-600 italic leading-tight" title={pilot.allergies}>
+                                <div className="text-sm font-bold text-orange-600 italic leading-tight" title={pilot.allergies}>
                                   {pilot.allergies}
                                 </div>
                               ) : (
@@ -171,7 +171,7 @@ export const StatusList = () => {
                                 {pilot.emergencyContactName || '---'}
                               </span>
                               {pilot.emergencyPhone && (
-                                <div className="flex items-center gap-1 text-red-600 font-mono text-[11px] bg-red-50 px-2 py-0.5 rounded-full border border-red-100 shrink-0">
+                                <div className="flex items-center gap-1 text-orange-600 font-mono text-[11px] bg-orange-50 px-2 py-0.5 rounded-full border border-orange-100 shrink-0">
                                   <Phone className="h-2.5 w-2.5" />
                                   <span>{formatPhone(pilot.emergencyPhone)}</span>
                                 </div>
@@ -197,7 +197,7 @@ export const StatusList = () => {
                             {pilot.emergencyContactName || ''}
                           </span>
                           {pilot.emergencyPhone && (
-                            <div className="flex items-center gap-1 text-red-600 font-mono text-[12px]">
+                            <div className="flex items-center gap-1 text-orange-600 font-mono text-[12px]">
                               <Phone className="h-3 w-3" />
                               <span>{formatPhone(pilot.emergencyPhone)}</span>
                             </div>
@@ -207,7 +207,7 @@ export const StatusList = () => {
 
                       <TableCell className="hidden md:table-cell">
                         {pilot.allergies ? (
-                          <div className="max-w-[auto] text-md font-bold text-red-600 bg-red-50 px-2 py-1 rounded-md border border-red-100 italic" title={pilot.allergies}>
+                          <div className="max-w-[auto] text-md font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-md border border-orange-100 italic" title={pilot.allergies}>
                             {pilot.allergies}
                           </div>
                         ) : (

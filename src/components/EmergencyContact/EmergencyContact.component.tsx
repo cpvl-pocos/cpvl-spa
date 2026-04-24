@@ -157,9 +157,9 @@ export const EmergencyContact: React.FC<EmergencyContactProps> = ({
   return (
     <div className="p-0 space-y-0 animate-in fade-in duration-500 w-full max-w-4xl mx-auto overflow-y-auto max-h-[90vh] scrollbar-thin">
       <div className="relative overflow-hidden bg-slate-900 sm:rounded-[2rem] p-6 md:p-8 text-white shadow-2xl">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/20 rounded-full blur-3xl -mr-32 -mt-32" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/20 rounded-full blur-3xl -mr-32 -mt-32" />
         <div className="relative z-10 space-y-3">
-          <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl w-fit"><HeartPulse size={24} className="text-red-400" /></div>
+          <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl w-fit"><HeartPulse size={24} className="text-orange-400" /></div>
           <div>
             <h2 className="text-xl md:text-2xl font-black tracking-tight">Contato de Emergência</h2>
             <p className="text-slate-400 font-bold text-[10px] tracking-wide uppercase">{displayName || 'Gerenciamento de contatos'}</p>
@@ -170,7 +170,7 @@ export const EmergencyContact: React.FC<EmergencyContactProps> = ({
       <div className="px-3 md:px-8 -mt-8 relative z-20 space-y-6 pb-10">
         {(formError || successMessage) && (
           <div className="space-y-4">
-            {formError && <Alert variant="destructive" className="rounded-2xl border-none shadow-xl bg-red-50 text-red-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{formError}</AlertDescription></Alert>}
+            {formError && <Alert variant="destructive" className="rounded-2xl border-none shadow-xl bg-orange-50 text-orange-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{formError}</AlertDescription></Alert>}
             {successMessage && <Alert className="rounded-2xl border-none shadow-xl bg-green-50 text-green-600"><CheckCircle2 className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{successMessage}</AlertDescription></Alert>}
           </div>
         )}

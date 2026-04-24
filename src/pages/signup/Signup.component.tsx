@@ -257,7 +257,7 @@ export const Signup: React.FC = () => {
 
           <CardContent className="space-y-4">
             {formError && (
-              <div className="flex items-center gap-3 rounded-xl border border-red-500/50 bg-red-500/20 backdrop-blur-md p-4 text-sm text-white shadow-xl animate-shake">
+              <div className="flex items-center gap-3 rounded-xl border border-orange-500/50 bg-orange-500/20 backdrop-blur-md p-4 text-sm text-white shadow-xl animate-shake">
                 <AlertDescription className="text-white">{formError}</AlertDescription>
               </div>
             )}
@@ -445,7 +445,7 @@ export const Signup: React.FC = () => {
               {errors.length > 0 && (
                 <div className="mt-2 space-y-2">
                   {errors.map((err, i) => (
-                    <div key={i} className="flex items-center gap-3 rounded-xl border border-red-500/50 bg-red-500/20 backdrop-blur-md p-3 text-xs text-white shadow-lg animate-shake">
+                    <div key={i} className="flex items-center gap-3 rounded-xl border border-orange-500/50 bg-orange-500/20 backdrop-blur-md p-3 text-xs text-white shadow-lg animate-shake">
                       <AlertDescription className="text-white">{err}</AlertDescription>
                     </div>
                   ))}

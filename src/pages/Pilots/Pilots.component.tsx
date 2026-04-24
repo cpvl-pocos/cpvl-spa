@@ -10,7 +10,6 @@ import {
   ChevronRight,
   Search,
   Filter,
-  CheckCircle2,
   XCircle,
   AlertCircle
 } from 'lucide-react';
@@ -199,10 +198,10 @@ export const Pilots = () => {
       <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
         <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-xl border-none shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-3xl">
           <DialogHeader className="items-center text-center">
-            <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
-              <XCircle className="w-8 h-8 text-red-600" />
+            <div className="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center mb-4">
+              <XCircle className="w-8 h-8 text-orange-600" />
             </div>
-            <DialogTitle className="text-xl font-black text-red-600">Não confirmar pagamento?</DialogTitle>
+            <DialogTitle className="text-xl font-black text-orange-600">Não confirmar pagamento?</DialogTitle>
             <DialogDescription className="text-slate-600 py-4">
               Tem certeza que deseja <span className="font-bold text-slate-900">não confirmar</span> o pagamento de:
               <span className="text-primary font-black text-lg block mt-2">
@@ -312,7 +311,7 @@ export const Pilots = () => {
                         </div>
                         {statusType === 'statusPayment' && normalizeString(statusFilter) === 'confirmar' ? (
                           <div onClick={e => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Button variant="ghost" size="icon" onClick={() => { setPilotToDelete(pilot); setDeleteModalOpen(true); }} className="text-red-400"><Trash2 /></Button>
+                            <Button variant="ghost" size="icon" onClick={() => { setPilotToDelete(pilot); setDeleteModalOpen(true); }} className="text-orange-400"><Trash2 /></Button>
                           </div>
                         ) : <ChevronRight className="w-5 h-5 text-slate-300" />}
                       </CardContent>

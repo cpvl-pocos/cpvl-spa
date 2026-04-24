@@ -31,6 +31,8 @@ export interface IPilot {
   emergencyPhone?: string;
   emergencyContactName?: string;
   allergies?: string;
+  ref_month?: number | string;
+  ref_year?: number | string;
   paymentMonthlies?: IPaymentMonthly[];
 }
 

@@ -4,7 +4,7 @@ import { ScrollReveal } from "../ScrollReveal/";
 export const Documentos = () => {
   return (
     <section id="estatuto" className="section-padding bg-muted">
-      <div className="container mx-auto max-w-4xl space-y-16">
+      <div className="container mx-auto max-w-4xl space-y-32">
         <ScrollReveal>
           <div className="text-center space-y-4">
             <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground">

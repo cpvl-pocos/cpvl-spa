@@ -193,7 +193,7 @@ export const Login = () => {
               </div>
 
               {error && (
-                <div className="flex items-center gap-3 rounded-xl border border-red-500/50 bg-red-500/20 backdrop-blur-md p-4 text-sm text-white shadow-xl animate-shake">
+                <div className="flex items-center gap-3 rounded-xl border border-orange-500/50 bg-orange-500/20 backdrop-blur-md p-4 text-sm text-white shadow-xl animate-shake">
                   <AlertCircle size={20} className="shrink-0 text-white" />
                   <p className="text-white">{error.message || "Erro ao realizar login. Verifique suas credenciais."}</p>
                 </div>
@@ -203,7 +203,7 @@ export const Login = () => {
                 <div className={`flex items-center gap-3 rounded-xl border p-4 text-sm shadow-xl backdrop-blur-md animate-fade-in ${feedback.type === "success"
                   ? "border-green-500/50 bg-green-500/20 text-white"
                   : feedback.type === "error"
-                    ? "border-red-500/50 bg-red-500/20 text-white"
+                    ? "border-orange-500/50 bg-orange-500/20 text-white"
                     : "border-blue-500/50 bg-blue-500/20 text-white"
                   }`}>
                   <AlertCircle size={18} className="shrink-0" />

@@ -206,8 +206,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
       <div className="px-3 md:px-8 -mt-8 relative z-20 space-y-6 pb-10">
         {(formError || successMessage || errors.length > 0) && (
           <div className="space-y-3">
-            {formError && <Alert variant="destructive" className="rounded-2xl border-none shadow-lg bg-red-50 text-red-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{formError}</AlertDescription></Alert>}
-            {errors.map((err, i) => <Alert key={i} variant="destructive" className="rounded-2xl border-none shadow-lg bg-red-50 text-red-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="font-bold text-[10px]">{err}</AlertDescription></Alert>)}
+            {formError && <Alert variant="destructive" className="rounded-2xl border-none shadow-lg bg-orange-50 text-orange-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{formError}</AlertDescription></Alert>}
+            {errors.map((err, i) => <Alert key={i} variant="destructive" className="rounded-2xl border-none shadow-lg bg-orange-50 text-orange-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="font-bold text-[10px]">{err}</AlertDescription></Alert>)}
             {successMessage && <Alert className="rounded-2xl border-none shadow-lg bg-green-50 text-green-600"><CheckCircle2 className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{successMessage}</AlertDescription></Alert>}
           </div>
         )}

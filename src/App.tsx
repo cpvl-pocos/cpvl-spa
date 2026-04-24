@@ -25,56 +25,59 @@ import { Historia } from "./components/Historia/";
 import { Home } from "./pages/Home/";
 
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "next-themes";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/header" element={<Header />} />
-          <Route path="/hero" element={<Hero />} />
-          <Route path="/historia" element={<Historia />} />
-          <Route path="/diretoria" element={<Diretoria />} />
-          <Route path="/espacoAereo" element={<EspacoAereo />} />
-          <Route path="/documentos" element={<Documentos />} />
-          <Route path="/footer" element={<Footer />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/newpassword" element={<Newpassword />} />
+  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/header" element={<Header />} />
+            <Route path="/hero" element={<Hero />} />
+            <Route path="/historia" element={<Historia />} />
+            <Route path="/diretoria" element={<Diretoria />} />
+            <Route path="/espacoAereo" element={<EspacoAereo />} />
+            <Route path="/documentos" element={<Documentos />} />
+            <Route path="/footer" element={<Footer />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/newpassword" element={<Newpassword />} />
 
-          <Route element={<PrivateRoutes />}>
-            <Route path="dashboard" element={<Dashboard />}>
-              <Route index element={<DashboardHome />} />
-              <Route path="datapanel" element={<DataPanel />} />
-              <Route path="pilots" element={<Pilots />} />
-              <Route path="pilots/:userId" element={<PilotDetails />} />
-              <Route path="status-list" element={<StatusList />} />
-              <Route
-                path="emergency-contact"
-                element={<EmergencyContactPage />}
-              />
-              <Route path="license-review" element={<LicenseReview />} />
-
-              <Route path="paymentMonthly" element={<PaymentMonthly />}>
-                <Route path=":userId" element={<PaymentMonthly />} />
+            <Route element={<PrivateRoutes />}>
+              <Route path="dashboard" element={<Dashboard />}>
+                <Route index element={<DashboardHome />} />
+                <Route path="datapanel" element={<DataPanel />} />
+                <Route path="pilots" element={<Pilots />} />
+                <Route path="pilots/:userId" element={<PilotDetails />} />
+                <Route path="status-list" element={<StatusList />} />
                 <Route
-                  path="confirmPayment/:userId"
-                  element={<PaymentMonthly />}
+                  path="emergency-contact"
+                  element={<EmergencyContactPage />}
                 />
-              </Route>
-              <Route path="*" element={<DashboardHome />} />
-            </Route>
-          </Route>
+                <Route path="license-review" element={<LicenseReview />} />
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </TooltipProvider>
-    </AuthProvider>
-  </QueryClientProvider>
+                <Route path="paymentMonthly" element={<PaymentMonthly />}>
+                  <Route path=":userId" element={<PaymentMonthly />} />
+                  <Route
+                    path="confirmPayment/:userId"
+                    element={<PaymentMonthly />}
+                  />
+                </Route>
+                <Route path="*" element={<DashboardHome />} />
+              </Route>
+            </Route>
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </TooltipProvider>
+      </AuthProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
 );
 
-export default App
+export default App;

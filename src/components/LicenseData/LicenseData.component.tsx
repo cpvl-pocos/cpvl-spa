@@ -18,7 +18,6 @@ import { API, getURI } from '@/services';
 import {
   FileUp,
   Trash2,
-  Globe,
   CheckCircle2,
   AlertCircle,
   Save,
@@ -73,9 +72,9 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
       setFormState({
         civl: existingData.civl || '',
         pilotLevel: existingData.pilotLevel || '',
-        cbvlExpiration: existingData.cbvlExpiration?.split('T')[0] || '',
+        cbvlExpiration: typeof existingData.cbvlExpiration === 'string' ? existingData.cbvlExpiration.split('T')[0] : '',
         imgCbvl: existingData.imgCbvl || '',
-        anacExpiration: existingData.anacExpiration?.split('T')[0] || '',
+        anacExpiration: typeof existingData.anacExpiration === 'string' ? existingData.anacExpiration.split('T')[0] : '',
         imgAnac: existingData.imgAnac || '',
         status: existingData.status || ''
       });
@@ -176,7 +175,7 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
       <div className="px-3 md:px-8 -mt-8 relative z-20 space-y-6 pb-10">
         {(formError || successMessage) && (
           <div className="space-y-4">
-            {formError && <Alert variant="destructive" className="rounded-2xl border-none shadow-xl bg-red-50 text-red-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{formError}</AlertDescription></Alert>}
+            {formError && <Alert variant="destructive" className="rounded-2xl border-none shadow-xl bg-orange-50 text-orange-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{formError}</AlertDescription></Alert>}
             {successMessage && <Alert className="rounded-2xl border-none shadow-xl bg-green-50 text-green-600"><CheckCircle2 className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{successMessage}</AlertDescription></Alert>}
           </div>
         )}
@@ -212,7 +211,7 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
                       <div><h3 className="font-black text-slate-900 text-sm md:text-base">Carteirinha {type}</h3><p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Documento {isCbvl ? '01' : '02'}</p></div>
                     </div>
                     <div className="space-y-5">
-                      <div className="space-y-2"><Label className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Data de Expiração</Label><Input name={dateField} type="date" value={formState[dateField as keyof typeof formState] || ''} onChange={handleChange} className="h-11 rounded-xl border-slate-100 bg-slate-50/30 font-bold" /></div>
+                      <div className="space-y-2"><Label className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Data de Expiração</Label><Input name={dateField} type="date" value={String(formState[dateField as keyof typeof formState] || '')} onChange={handleChange} className="h-11 rounded-xl border-slate-100 bg-slate-50/30 font-bold" /></div>
                       <div className="space-y-3">
                         <Label className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Anexo do Documento</Label>
                         <div className="flex items-center gap-3">

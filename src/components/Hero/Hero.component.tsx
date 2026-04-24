@@ -43,7 +43,7 @@ export const Hero = () => {
       </div>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
-        <h4 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-black text-primary-foreground tracking-tight mb-4 drop-shadow-lg">
+        <h4 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading font-black text-white/80 tracking-tight mb-4 drop-shadow-lg">
           Clube Poçoscaldense de Vôo Livre
         </h4>
         <h1 className="text-lg sm:text-xl text-primary-foreground/80 font-body max-w-2xl drop-shadow">
