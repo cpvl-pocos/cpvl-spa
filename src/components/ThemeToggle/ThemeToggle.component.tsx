@@ -23,11 +23,10 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
 
   return (
     <Button
-      variant="ghost"
       size="icon"
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       className={cn(
-        "relative rounded-full w-10 h-10 transition-all duration-300 overflow-hidden group",
+        "relative rounded-full w-10 h-10 transition-all duration-300 overflow-hidden group bg-transparent",
         className
       )}
       aria-label="Alternar tema"
