@@ -1,16 +1,15 @@
 // src/components/MainNav/MainNav.component.tsx
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
   Menu as MenuIcon,
   LogOut,
   ChevronDown,
   LayoutDashboard,
-  LogOut as LogoutIcon,
   Sun,
   Moon,
   Coffee
 } from 'lucide-react';
-import type { IAllowedRoutes } from '@/types';
+import type { IAllowedRoutes, IPilot, IUser } from '@/types';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,47 +20,39 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 
-
 interface IProps {
   onLogout: () => void;
   onNav: (link: IAllowedRoutes) => void;
   allowedRoutes: IAllowedRoutes[];
-  userData?: any;
+  userData?: IPilot | IUser;
 }
 
 const MainNav = ({ onLogout, onNav, allowedRoutes, userData }: IProps) => {
-
-  const getGreetingMessage = useCallback(() => {
+  const greeting = useMemo(() => {
     const hour = new Date().getHours();
-    const firstName =
-      (userData && userData.pilot && userData.pilot.firstName) ||
-      (userData && userData.firstName) ||
-      '';
-    const lastName =
-      (userData && userData.pilot && userData.pilot.lastName) ||
-      (userData && userData.lastName) ||
-      '';
+    
+    // Type-safe name extraction
+    const pilot = (userData as any)?.pilot || userData;
+    const firstName = pilot?.firstName || '';
 
-    if (!firstName && !lastName) return null;
+    if (!firstName) return null;
 
-    let greeting = '';
+    let text = '';
     let Icon = Coffee;
 
     if (hour >= 6 && hour < 12) {
-      greeting = 'Bom dia';
+      text = `Bom dia, ${firstName}!`;
       Icon = Sun;
     } else if (hour >= 12 && hour < 18) {
-      greeting = 'Boa tarde';
+      text = `Boa tarde, ${firstName}!`;
       Icon = Sun;
     } else {
-      greeting = 'Boa noite';
+      text = `Boa noite, ${firstName}!`;
       Icon = Moon;
     }
 
-    return { text: `${greeting}, ${firstName}!`, Icon };
+    return { text, Icon };
   }, [userData]);
-
-  const greeting = getGreetingMessage();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
@@ -134,7 +125,7 @@ const MainNav = ({ onLogout, onNav, allowedRoutes, userData }: IProps) => {
                   ))}
                   <DropdownMenuSeparator className="bg-white/5" />
                   <DropdownMenuItem onClick={onLogout} className="px-4 py-3 text-red-400 focus:text-red-400 font-bold">
-                    <LogoutIcon className="w-4 h-4 mr-2" /> Sair
+                    <LogOut className="w-4 h-4 mr-2" /> Sair
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

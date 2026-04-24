@@ -29,18 +29,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-interface ILicenseData {
-  id?: number;
-  userId: number;
-  civl?: string;
-  pilotLevel?: string;
-  cbvlExpiration?: string;
-  imgCbvl?: string;
-  anacExpiration?: string;
-  imgAnac?: string;
-  status?: string;
-}
+import type { ILicenseData, IPilot } from '@/types';
 
 interface LicenseDataProps {
   userId: number;
@@ -55,9 +44,7 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
   userName,
   onClose
 }) => {
-  const [formState, setFormState] = useState<
-    Omit<ILicenseData, 'id' | 'userId'>
-  >({
+  const [formState, setFormState] = useState<Omit<ILicenseData, 'id' | 'userId'>>({
     civl: '',
     pilotLevel: '',
     cbvlExpiration: '',
@@ -79,22 +66,16 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
     method: 'GET'
   });
 
-  const { doFetch: doSave, error: saveError } = useFetch<ILicenseData>({
-    method: 'POST'
-  });
+  const { doFetch: doSave, error: saveError } = useFetch<ILicenseData>({ method: 'POST' });
 
   useEffect(() => {
     if (existingData) {
       setFormState({
         civl: existingData.civl || '',
         pilotLevel: existingData.pilotLevel || '',
-        cbvlExpiration: existingData.cbvlExpiration
-          ? existingData.cbvlExpiration.split('T')[0]
-          : '',
+        cbvlExpiration: existingData.cbvlExpiration?.split('T')[0] || '',
         imgCbvl: existingData.imgCbvl || '',
-        anacExpiration: existingData.anacExpiration
-          ? existingData.anacExpiration.split('T')[0]
-          : '',
+        anacExpiration: existingData.anacExpiration?.split('T')[0] || '',
         imgAnac: existingData.imgAnac || '',
         status: existingData.status || ''
       });
@@ -117,20 +98,11 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
     try {
       await doSave({
         url: getURI(API.licenseData),
-        method: 'POST',
-        body: {
-          userId,
-          ...formState
-        }
+        body: { userId, ...formState }
       });
       setSuccessMessage('Dados de licença salvos com sucesso!');
       setIsSubmitting(false);
-
-      // Re-fetch to get updated data
-      fetchExisting({
-        url: getURI(`${API.licenseData}/${userId}`),
-        method: 'GET'
-      });
+      fetchExisting({ url: getURI(`${API.licenseData}/${userId}`) });
     } catch (err) {
       setIsSubmitting(false);
       setFormError('Falha ao salvar os dados.');
@@ -138,382 +110,130 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
   };
 
   const handleClear = () => {
-    setFormState({
-      civl: '',
-      pilotLevel: '',
-      cbvlExpiration: '',
-      imgCbvl: '',
-      anacExpiration: '',
-      imgAnac: '',
-      status: ''
-    });
+    setFormState({ civl: '', pilotLevel: '', cbvlExpiration: '', imgCbvl: '', anacExpiration: '', imgAnac: '', status: '' });
     setFormError(undefined);
     setSuccessMessage(undefined);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormState((prev) => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormState(prev => ({ ...prev, [name]: value }));
     setFormError(undefined);
   };
 
   const handleSelectChange = (value: string) => {
-    setFormState((prev) => ({
-      ...prev,
-      pilotLevel: value
-    }));
+    setFormState(prev => ({ ...prev, pilotLevel: value }));
     setFormError(undefined);
   };
 
-  const handleFileUpload = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    field: 'imgCbvl' | 'imgAnac'
-  ) => {
-    const files = e.target.files;
-    const file = files && files.length > 0 ? files[0] : null;
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, field: 'imgCbvl' | 'imgAnac') => {
+    const file = e.target.files?.[0];
     if (!file) return;
-
-    // Validate file size (max 2MB for documents)
-    if (file.size > 2 * 1024 * 1024) {
-      setFormError('O arquivo deve ter no máximo 2MB');
-      return;
-    }
-
-    // Validate file type
+    if (file.size > 2 * 1024 * 1024) return setFormError('O arquivo deve ter no máximo 2MB');
+    
     const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
-    if (!allowedTypes.includes(file.type)) {
-      setFormError('O arquivo deve ser uma imagem (JPG, PNG) ou PDF');
-      return;
-    }
+    if (!allowedTypes.includes(file.type)) return setFormError('O arquivo deve ser uma imagem ou PDF');
 
     const reader = new FileReader();
     reader.onload = () => {
-      setFormState((prev) => ({
-        ...prev,
-        [field]: reader.result as string
-      }));
+      setFormState(prev => ({ ...prev, [field]: reader.result as string }));
       setFormError(undefined);
     };
     reader.readAsDataURL(file);
   };
 
-  const handleRemoveFile = (field: 'imgCbvl' | 'imgAnac') => {
-    setFormState((prev) => ({
-      ...prev,
-      [field]: ''
-    }));
-  };
-
-  const { data: pilotData } = useFetch<any>({
+  const { data: pilotData } = useFetch<IPilot>({
     url: userId ? getURI(`${API.pilots}/${userId}`) : undefined,
-    method: 'GET'
+    method: 'GET',
+    immediate: !userName
   });
 
-  const displayName = pilotData
-    ? `${pilotData.firstName} ${pilotData.lastName}`
-    : userName;
+  const displayName = userName || (pilotData ? `${pilotData.firstName} ${pilotData.lastName}` : '');
 
-  if (loadingExisting) {
-    return (
-      <div className="flex flex-col items-center justify-center p-12 gap-4">
-        <Spinner className="h-10 w-10 text-primary" />
-        <p className="text-sm font-bold text-muted-foreground animate-pulse">Carregando documentação...</p>
-      </div>
-    );
-  }
+  if (loadingExisting) return <div className="flex justify-center p-12"><Spinner className="h-10 w-10" /></div>;
 
   return (
-    <div className="p-0 space-y-0 animate-in fade-in duration-500 w-full max-w-4xl mx-auto overflow-y-auto max-h-[90vh] sm:max-h-[85vh] scrollbar-thin scrollbar-thumb-slate-200">
-      {/* Dynamic Header - Refined for all sizes */}
-      <div className="relative overflow-hidden bg-slate-900 sm:rounded-[2rem] md:rounded-[2.5rem] p-4 sm:p-6 md:p-8 text-white shadow-2xl mx-0 sm:mx-0">
+    <div className="p-0 space-y-0 animate-in fade-in duration-500 w-full max-w-4xl mx-auto overflow-y-auto max-h-[90vh] scrollbar-thin">
+      <div className="relative overflow-hidden bg-slate-900 sm:rounded-[2rem] p-6 md:p-8 text-white shadow-2xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32" />
         <div className="relative z-10 space-y-3">
           <div className="flex items-center justify-between">
-            <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl">
-              <ShieldCheck size={20} className="text-primary-foreground sm:w-6 sm:h-6" />
-            </div>
+            <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl"><ShieldCheck size={24} className="text-primary-foreground" /></div>
             {formState.status && (
-              <Badge
-                variant={formState.status === 'Confirmado' ? 'success' : 'warning'}
-                className="h-6 sm:h-7 px-3 rounded-full font-black uppercase tracking-widest text-[8px] sm:text-[9px] shadow-lg"
-              >
-                {formState.status === 'Confirmado' ? (
-                  <CheckCircle2 size={10} className="mr-1 sm:w-3 sm:h-3" />
-                ) : (
-                  <AlertCircle size={10} className="mr-1 sm:w-3 sm:h-3" />
-                )}
+              <Badge variant={formState.status === 'Confirmado' ? 'success' : 'warning'} className="px-3 rounded-full font-black uppercase tracking-widest text-[9px] shadow-lg">
+                {formState.status === 'Confirmado' ? <CheckCircle2 size={12} className="mr-1" /> : <AlertCircle size={12} className="mr-1" />}
                 {formState.status === 'Confirmado' ? 'Validado' : 'Em Análise'}
               </Badge>
             )}
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-black tracking-tight font-['Flamenco']">Documentação</h2>
-            <p className="text-slate-400 font-bold text-[9px] sm:text-[10px] tracking-wide uppercase">
-              {displayName ? `Piloto: ${displayName}` : 'Gerenciamento de licenças'}
-            </p>
+            <h2 className="text-xl md:text-2xl font-black tracking-tight">Documentação</h2>
+            <p className="text-slate-400 font-bold text-[10px] tracking-wide uppercase">{displayName || 'Gerenciamento de licenças'}</p>
           </div>
         </div>
       </div>
 
-      <div className="px-3 sm:px-6 md:px-8 mt-4 sm:mt-6 md:-mt-8 relative z-20 space-y-6 pb-10">
+      <div className="px-3 md:px-8 -mt-8 relative z-20 space-y-6 pb-10">
         {(formError || successMessage) && (
           <div className="space-y-4">
-            {formError && (
-              <Alert variant="destructive" className="rounded-xl sm:rounded-2xl border-none shadow-xl bg-red-50 text-red-600 py-3">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="font-bold text-xs sm:text-sm">{formError}</AlertDescription>
-              </Alert>
-            )}
-            {successMessage && (
-              <Alert className="rounded-xl sm:rounded-2xl border-none shadow-xl bg-green-50 text-green-600 py-3">
-                <CheckCircle2 className="h-4 w-4" />
-                <AlertDescription className="font-bold text-xs sm:text-sm">{successMessage}</AlertDescription>
-              </Alert>
-            )}
+            {formError && <Alert variant="destructive" className="rounded-2xl border-none shadow-xl bg-red-50 text-red-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{formError}</AlertDescription></Alert>}
+            {successMessage && <Alert className="rounded-2xl border-none shadow-xl bg-green-50 text-green-600"><CheckCircle2 className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{successMessage}</AlertDescription></Alert>}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
-          {/* General Info Card */}
-          <Card className="rounded-2xl sm:rounded-[2.5rem] border-none shadow-[0_15px_40px_rgba(0,0,0,0.04)] bg-white/90 backdrop-blur-xl p-5 sm:p-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between px-1">
-                  <Label htmlFor="civl" className="font-black text-slate-700 uppercase tracking-widest text-[9px] sm:text-[10px]">CIVL ID Global</Label>
-                  <a
-                    href="https://civlcomps.org/"
-                    target="_blank"
-                    rel="noopener"
-                    className="text-[9px] sm:text-[10px] text-primary hover:underline font-black flex items-center gap-1 transition-all hover:gap-1.5"
-                  >
-                    <Globe size={10} />
-                    CONSULTAR
-                    <ChevronRight size={10} />
-                  </a>
-                </div>
-                <Input
-                  id="civl"
-                  name="civl"
-                  value={formState.civl || ''}
-                  onChange={handleChange}
-                  placeholder="Ex: 123456"
-                  className="h-12 rounded-xl sm:rounded-2xl bg-slate-50/50 border-slate-100 shadow-sm focus:ring-primary/20 font-bold text-sm"
-                />
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <Card className="rounded-[2.5rem] border-none shadow-sm bg-white/90 p-6 md:p-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between px-1"><Label className="font-black text-slate-700 uppercase tracking-widest text-[9px]">CIVL ID Global</Label><a href="https://civlcomps.org/" target="_blank" rel="noopener" className="text-[9px] text-primary font-black flex items-center gap-1 transition-all">CONSULTAR <ChevronRight size={10} /></a></div>
+                <Input name="civl" value={formState.civl || ''} onChange={handleChange} placeholder="Ex: 123456" className="h-12 rounded-2xl bg-slate-50 font-bold" />
               </div>
-
-              <div className="space-y-3">
-                <Label htmlFor="pilotLevel" className="font-black text-slate-700 uppercase tracking-widest text-[9px] sm:text-[10px] px-1">Nível de Habilitação</Label>
-                <Select
-                  value={formState.pilotLevel}
-                  onValueChange={handleSelectChange}
-                >
-                  <SelectTrigger id="pilotLevel" className="h-12 rounded-xl sm:rounded-2xl bg-slate-50/50 border-slate-100 shadow-sm focus:ring-primary/20 font-bold text-sm">
-                    <SelectValue placeholder="Selecione o nível" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-2xl border-slate-100 shadow-2xl">
-                    {PILOT_LEVELS.map((level) => (
-                      <SelectItem key={level} value={level} className="rounded-xl font-bold py-3 text-sm">
-                        Nível {level}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
+              <div className="space-y-2">
+                <Label className="font-black text-slate-700 uppercase tracking-widest text-[9px]">Nível de Habilitação</Label>
+                <Select value={formState.pilotLevel} onValueChange={handleSelectChange}>
+                  <SelectTrigger className="h-12 rounded-2xl bg-slate-50 font-bold"><SelectValue placeholder="Selecione" /></SelectTrigger>
+                  <SelectContent className="rounded-2xl shadow-2xl">{PILOT_LEVELS.map(l => <SelectItem key={l} value={l} className="rounded-xl font-bold py-3">Nível {l}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
             </div>
           </Card>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-            {/* CBVL Card */}
-            <Card className="rounded-2xl sm:rounded-[2.5rem] border-none shadow-[0_15px_40px_rgba(0,0,0,0.04)] bg-white/90 backdrop-blur-xl overflow-hidden group">
-              <div className="h-1 w-full bg-primary/20 group-hover:bg-primary transition-all duration-500" />
-              <div className="p-5 sm:p-8 space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
-                    <IdCard size={20} />
-                  </div>
-                  <div>
-                    <h3 className="font-black text-slate-900 tracking-tight text-sm sm:text-base">Carteirinha CBVL</h3>
-                    <p className="text-[9px] sm:text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Documento 01</p>
-                  </div>
-                </div>
-
-                <div className="space-y-5">
-                  <div className="space-y-2">
-                    <Label htmlFor="cbvlExpiration" className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400 tracking-wider ml-1">Data de Expiração</Label>
-                    <Input
-                      id="cbvlExpiration"
-                      name="cbvlExpiration"
-                      type="date"
-                      value={formState.cbvlExpiration || ''}
-                      onChange={handleChange}
-                      className="h-11 rounded-xl border-slate-100 bg-slate-50/30 font-bold text-xs sm:text-sm"
-                    />
-                  </div>
-
-                  <div className="space-y-3">
-                    <Label className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400 tracking-wider ml-1">Anexo do Documento</Label>
-                    <div className="flex items-center gap-3">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className={cn(
-                          "flex-1 h-11 rounded-xl border-slate-100 font-bold transition-all relative overflow-hidden group/btn text-[10px] sm:text-xs",
-                          formState.imgCbvl ? "bg-primary/5 border-primary/20 text-primary" : "hover:border-primary/20 hover:bg-primary/5"
-                        )}
-                        asChild
-                      >
-                        <label className="cursor-pointer">
-                          <FileUp className="mr-2 h-4 w-4 transition-transform group-hover/btn:-translate-y-0.5" />
-                          {formState.imgCbvl ? 'Substituir' : 'Enviar Documento'}
-                          <input
-                            type="file"
-                            className="hidden"
-                            accept="image/*,.pdf"
-                            onChange={(e) => handleFileUpload(e, 'imgCbvl')}
-                          />
-                        </label>
-                      </Button>
-                      {formState.imgCbvl && (
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          className="h-11 w-11 rounded-xl shadow-lg shadow-destructive/10"
-                          onClick={() => handleRemoveFile('imgCbvl')}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {['CBVL', 'ANAC'].map((type) => {
+              const field = type === 'CBVL' ? 'imgCbvl' : 'imgAnac';
+              const dateField = type === 'CBVL' ? 'cbvlExpiration' : 'anacExpiration';
+              const isCbvl = type === 'CBVL';
+              return (
+                <Card key={type} className="rounded-[2.5rem] border-none shadow-sm bg-white/90 overflow-hidden group">
+                  <div className={cn("h-1 w-full transition-colors duration-500", isCbvl ? "bg-primary/20 group-hover:bg-primary" : "bg-slate-200 group-hover:bg-slate-400")} />
+                  <div className="p-6 md:p-8 space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center shadow-inner", isCbvl ? "bg-primary/10 text-primary" : "bg-slate-100 text-slate-600")}>{isCbvl ? <IdCard size={20} /> : <FileText size={20} />}</div>
+                      <div><h3 className="font-black text-slate-900 text-sm md:text-base">Carteirinha {type}</h3><p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Documento {isCbvl ? '01' : '02'}</p></div>
                     </div>
-                    {formState.imgCbvl && (
-                      <div className="flex items-center gap-2 px-1 text-green-600 animate-in fade-in slide-in-from-left-2">
-                        <CheckCircle2 size={12} strokeWidth={3} />
-                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">Anexado</span>
+                    <div className="space-y-5">
+                      <div className="space-y-2"><Label className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Data de Expiração</Label><Input name={dateField} type="date" value={formState[dateField as keyof typeof formState] || ''} onChange={handleChange} className="h-11 rounded-xl border-slate-100 bg-slate-50/30 font-bold" /></div>
+                      <div className="space-y-3">
+                        <Label className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Anexo do Documento</Label>
+                        <div className="flex items-center gap-3">
+                          <Button type="button" variant="outline" className={cn("flex-1 h-11 rounded-xl border-slate-100 font-bold transition-all relative text-xs", formState[field] ? "bg-primary/5 border-primary/20 text-primary" : "hover:bg-primary/5")} asChild><label className="cursor-pointer"><FileUp className="mr-2 h-4 w-4" />{formState[field] ? 'Substituir' : 'Enviar Documento'}<input type="file" className="hidden" accept="image/*,.pdf" onChange={(e) => handleFileUpload(e, field)} /></label></Button>
+                          {formState[field] && <Button type="button" variant="destructive" size="icon" className="h-11 w-11 rounded-xl" onClick={() => setFormState(prev => ({ ...prev, [field]: '' }))}><Trash2 className="h-4 w-4" /></Button>}
+                        </div>
+                        {formState[field] && <div className="flex items-center gap-2 text-green-600 animate-in fade-in"><CheckCircle2 size={12} strokeWidth={3} /><span className="text-[9px] font-black uppercase tracking-widest">Anexado</span></div>}
                       </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            {/* ANAC Card */}
-            <Card className="rounded-2xl sm:rounded-[2.5rem] border-none shadow-[0_15px_40px_rgba(0,0,0,0.04)] bg-white/90 backdrop-blur-xl overflow-hidden group">
-              <div className="h-1 w-full bg-slate-200 group-hover:bg-slate-400 transition-all duration-500" />
-              <div className="p-5 sm:p-8 space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 shadow-inner">
-                    <FileText size={20} />
-                  </div>
-                  <div>
-                    <h3 className="font-black text-slate-900 tracking-tight text-sm sm:text-base">Carteirinha ANAC</h3>
-                    <p className="text-[9px] sm:text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Documento 02</p>
-                  </div>
-                </div>
-
-                <div className="space-y-5">
-                  <div className="space-y-2">
-                    <Label htmlFor="anacExpiration" className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400 tracking-wider ml-1">Data de Expiração</Label>
-                    <Input
-                      id="anacExpiration"
-                      name="anacExpiration"
-                      type="date"
-                      value={formState.anacExpiration || ''}
-                      onChange={handleChange}
-                      className="h-11 rounded-xl border-slate-100 bg-slate-50/30 font-bold text-xs sm:text-sm"
-                    />
-                  </div>
-
-                  <div className="space-y-3">
-                    <Label className="text-[9px] sm:text-[10px] font-black uppercase text-slate-400 tracking-wider ml-1">Anexo do Documento</Label>
-                    <div className="flex items-center gap-3">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className={cn(
-                          "flex-1 h-11 rounded-xl border-slate-100 font-bold transition-all relative overflow-hidden group/btn text-[10px] sm:text-xs",
-                          formState.imgAnac ? "bg-slate-100 border-slate-300 text-slate-900" : "hover:border-slate-300 hover:bg-slate-100"
-                        )}
-                        asChild
-                      >
-                        <label className="cursor-pointer">
-                          <FileUp className="mr-2 h-4 w-4 transition-transform group-hover/btn:-translate-y-0.5" />
-                          {formState.imgAnac ? 'Substituir' : 'Enviar Documento'}
-                          <input
-                            type="file"
-                            className="hidden"
-                            accept="image/*,.pdf"
-                            onChange={(e) => handleFileUpload(e, 'imgAnac')}
-                          />
-                        </label>
-                      </Button>
-                      {formState.imgAnac && (
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          className="h-11 w-11 rounded-xl shadow-lg shadow-destructive/10"
-                          onClick={() => handleRemoveFile('imgAnac')}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      )}
                     </div>
-                    {formState.imgAnac && (
-                      <div className="flex items-center gap-2 px-1 text-slate-600 animate-in fade-in slide-in-from-left-2">
-                        <CheckCircle2 size={12} strokeWidth={3} />
-                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">Anexado</span>
-                      </div>
-                    )}
                   </div>
-                </div>
-              </div>
-            </Card>
+                </Card>
+              );
+            })}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6 border-t border-slate-100">
-            <div className="flex flex-col sm:flex-row gap-3 flex-1 order-2 sm:order-1">
-              {onClose && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={onClose}
-                  disabled={isSubmitting}
-                  className="w-full sm:flex-1 rounded-xl h-10 sm:h-12 font-black text-slate-400 hover:text-slate-600 hover:bg-slate-100 order-2 sm:order-1 text-xs"
-                >
-                  VOLTAR / FECHAR
-                </Button>
-              )}
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleClear}
-                disabled={isSubmitting}
-                className="w-full sm:flex-1 rounded-xl h-10 sm:h-12 font-black border-slate-200 text-slate-500 hover:text-primary hover:bg-primary/5 order-1 sm:order-2 text-xs"
-              >
-                <Eraser className="mr-2 h-4 w-4" />
-                LIMPAR TUDO
-              </Button>
+          <div className="flex gap-4 pt-6">
+            <div className="flex gap-3 flex-1">
+              {onClose && <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black text-slate-400">VOLTAR</Button>}
+              <Button type="button" variant="outline" onClick={handleClear} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black border-slate-200 text-slate-500"><Eraser className="mr-2 h-4 w-4" />LIMPAR</Button>
             </div>
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full sm:flex-1 sm:max-w-[240px] rounded-xl h-10 sm:h-12 font-black text-sm sm:text-base shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] order-1 sm:order-2"
-            >
-              {isSubmitting ? (
-                <>
-                  <Spinner className="mr-2 h-4 w-4" />
-                  SALVANDO...
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  SALVAR DADOS
-                </>
-              )}
-            </Button>
+            <Button type="submit" disabled={isSubmitting} className="flex-1 max-w-[240px] rounded-2xl h-12 font-black shadow-xl">{isSubmitting ? <Spinner className="mr-2 h-4 w-4" /> : <Save className="mr-2 h-5 w-5" />}SALVAR DADOS</Button>
           </div>
         </form>
       </div>

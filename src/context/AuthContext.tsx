@@ -3,14 +3,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { useFetch, useIdleTimeout } from '@/hooks';
 import { useSessionStorage } from 'usehooks-ts';
 import { API, getURI } from '@/services';
-import type { IAllowedRoutes } from '@/types';
-
-interface IProfileData {
-  user: any;
-  pilotInfo: any;
-  routes: IAllowedRoutes[];
-  warnings: string[];
-}
+import type { IProfileData } from '@/types';
 
 interface AuthContextType {
   profile: IProfileData | null;
@@ -38,7 +31,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const { doFetch } = useFetch<IProfileData>(fetchConfig);
 
   const logout = useCallback(() => {
-    console.log('Logging out due to inactivity');
     localStorage.removeItem('CPVL_AUTH_TOKEN');
     setIsLogged(false);
     setProfile(null);
@@ -64,7 +56,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [doFetch]);
 
   useEffect(() => {
-    // We only fetch if the user is supposedly logged in
     if (isLogged && !profile && !loading) {
       fetchProfile();
     } else if (!isLogged && profile) {

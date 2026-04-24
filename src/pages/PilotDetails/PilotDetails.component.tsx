@@ -27,28 +27,13 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { EditProfile } from '@/components/EditProfile';
 import { EmergencyContact } from '@/components/EmergencyContact';
 import { LicenseData } from '@/components/LicenseData';
-
-interface IPilotDetails {
-  id?: number;
-  userId: number;
-  firstName: string;
-  lastName: string;
-  cpf: string;
-  cellphone: string;
-  email: string;
-  status: string;
-  photoUrl?: string;
-  paymentMonthlies?: any[];
-  emergencyContact?: any;
-  licenseData?: any;
-}
-
-
+import { formatPhone } from '@/util/format';
+import type { IPilot } from '@/types';
 
 export const PilotDetails = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
-  const [pilot, setPilot] = useState<IPilotDetails | null>(null);
+  const [pilot, setPilot] = useState<IPilot | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isEmergencyContactOpen, setIsEmergencyContactOpen] = useState(false);
   const [isLicenseDataOpen, setIsLicenseDataOpen] = useState(false);
@@ -57,15 +42,13 @@ export const PilotDetails = () => {
     data: pilotData,
     error: pilotError,
     loading: pilotLoading
-  } = useFetch<IPilotDetails>({
+  } = useFetch<IPilot>({
     url: getURI(`${API.pilots}/${userId}`)
   });
 
   const { profile } = useAuth();
-  const allowedRoutes = profile && profile.routes;
-
-  const isAdmin =
-    allowedRoutes && allowedRoutes.some((r) => r.route === 'pilots');
+  const isAdmin = profile?.user?.role === 'admin' || 
+    profile?.routes?.some((r) => r.route === 'pilots');
 
   useEffect(() => {
     if (pilotData) {
@@ -75,7 +58,7 @@ export const PilotDetails = () => {
 
   if (pilotLoading || (!pilot && !pilotError)) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-400px gap-4">
+      <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
         <Spinner className="w-12 h-12 text-primary" />
         <p className="text-slate-400 font-bold animate-pulse">Carregando perfil do piloto...</p>
       </div>
@@ -145,9 +128,9 @@ export const PilotDetails = () => {
         )}
       </div>
 
-      <div className="flex flex-col gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         {/* Profile Info Side */}
-        <div className="w-full space-y-6">
+        <div className="xl:col-span-1 space-y-6">
           <Card className="rounded-[40px] border-none shadow-[0_20px_60px_rgba(0,0,0,0.05)] bg-white/70 backdrop-blur-xl overflow-hidden relative group">
             <div className="absolute top-0 left-0 w-full h-24 bg-linear-to-br from-primary/10 to-primary/5 transition-all group-hover:h-28" />
             <CardContent className="pt-8 relative flex flex-col items-center text-center px-6 pb-10">
@@ -178,7 +161,7 @@ export const PilotDetails = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-black uppercase text-slate-400 tracking-wider">Contato Celular</p>
-                    <p className="text-sm font-bold text-slate-700">{pilot.cellphone}</p>
+                    <p className="text-sm font-bold text-slate-700">{formatPhone(pilot.cellphone)}</p>
                   </div>
                 </div>
 
@@ -193,11 +176,11 @@ export const PilotDetails = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 mt-8">
+              <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1 gap-2 mt-8 w-full">
                 <Button
                   variant="outline"
                   onClick={() => setIsLicenseDataOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-2xl font-black border-slate-100 text-slate-400 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12"
+                  className="inline-flex items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-400 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
                 >
                   <Settings className="w-4 h-4" /> Documentação
                 </Button>
@@ -205,7 +188,7 @@ export const PilotDetails = () => {
                 <Button
                   variant="outline"
                   onClick={() => setIsEmergencyContactOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-2xl font-black border-slate-100 text-slate-400 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12"
+                  className="inline-flex items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-400 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
                 >
                   <Settings className="w-4 h-4" /> Emergência
                 </Button>
@@ -213,18 +196,17 @@ export const PilotDetails = () => {
                 <Button
                   variant="outline"
                   onClick={() => setIsEditModalOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-2xl font-black border-slate-100 text-slate-400 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12"
+                  className="inline-flex items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-400 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
                 >
                   <Settings className="w-4 h-4" /> Perfil
                 </Button>
-
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Payments Section */}
-        <div className="w-full">
+        <div className="xl:col-span-2">
           <Card className="rounded-[40px] border-none shadow-[0_20px_60px_rgba(0,0,0,0.05)] bg-white/70 backdrop-blur-xl overflow-hidden min-h-[600px]">
             <CardHeader className="p-8 border-b border-white/50 bg-white/30">
               <div className="flex items-center justify-between">
@@ -250,49 +232,42 @@ export const PilotDetails = () => {
           </Card>
         </div>
       </div>
-      <div className="flex flex-row items-center justify-center gap-4">
-        <div>
-          <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-            <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
-              {pilot && (
-                <EditProfile
-                  userId={pilot.userId}
-                  onClose={() => setIsEditModalOpen(false)}
-                />
-              )}
-            </DialogContent>
-          </Dialog>
-        </div>
 
-        <div>
-          <Dialog open={isEmergencyContactOpen} onOpenChange={setIsEmergencyContactOpen}>
-            <DialogContent className="sm:max-w-3xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
-              {pilot && (
-                <EmergencyContact
-                  userId={pilot.userId}
-                  onClose={() => setIsEmergencyContactOpen(false)}
-                />
-              )}
-            </DialogContent>
-          </Dialog>
-        </div>
+      {/* Modals */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
+          {pilot && (
+            <EditProfile
+              userId={pilot.userId}
+              onClose={() => setIsEditModalOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
-        <div>
-          <Dialog open={isLicenseDataOpen} onOpenChange={setIsLicenseDataOpen}>
-            <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
-              {pilot && (
-                <LicenseData
-                  userId={pilot.userId}
-                  onClose={() => setIsLicenseDataOpen(false)}
-                />
-              )}
-            </DialogContent>
-          </Dialog>
-        </div>
+      <Dialog open={isEmergencyContactOpen} onOpenChange={setIsEmergencyContactOpen}>
+        <DialogContent className="sm:max-w-3xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
+          {pilot && (
+            <EmergencyContact
+              userId={pilot.userId}
+              onClose={() => setIsEmergencyContactOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
-      </div>
+      <Dialog open={isLicenseDataOpen} onOpenChange={setIsLicenseDataOpen}>
+        <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
+          {pilot && (
+            <LicenseData
+              userId={pilot.userId}
+              onClose={() => setIsLicenseDataOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
-export default PilotDetails;  
+export default PilotDetails;

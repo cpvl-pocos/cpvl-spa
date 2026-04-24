@@ -1,19 +1,13 @@
 // src/pages/DataPanel/DataPanel.component.tsx
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { BarChart3, PieChart, Activity, TrendingUp } from 'lucide-react';
 import { PieChartComponent } from '../../components/Charts/PieChart/PieChart.component';
 import { useFetch } from '../../hooks';
 import { API, getURI } from '../../services';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
-
-interface IPilot {
-  id?: number;
-  userId: number;
-  firstName: string;
-  lastName: string;
-  status: string;
-}
+import { capitalize } from '@/util/format';
+import type { IPilot } from '@/types';
 
 export const DataPanel = () => {
   const { data: pilots, loading: loadingPilots } = useFetch<IPilot[]>({
@@ -24,53 +18,39 @@ export const DataPanel = () => {
     url: getURI(API.status)
   });
 
-  const [pilotStatusData, setPilotStatusData] = useState<any[]>([]);
-  const [paymentStatusData, setPaymentStatusData] = useState<any[]>([]);
+  const pilotStatusData = useMemo(() => {
+    if (!pilots || !Array.isArray(pilots)) return [];
+    
+    const statusCounts: Record<string, number> = {};
+    pilots.forEach((p) => {
+      const s = p.status || 'Desconhecido';
+      statusCounts[s] = (statusCounts[s] || 0) + 1;
+    });
 
-  useEffect(() => {
-    if (pilots && Array.isArray(pilots)) {
-      const statusCounts: Record<string, number> = {};
-      pilots.forEach((p) => {
-        const s = p.status || 'Desconhecido';
-        statusCounts[s] = (statusCounts[s] || 0) + 1;
-      });
-
-      const data = Object.keys(statusCounts)
-        .filter((key) => statusCounts[key] > 0)
-        .map((key) => ({
-          name: key.charAt(0).toUpperCase() + key.slice(1),
-          value: statusCounts[key]
-        }));
-
-      setPilotStatusData(data);
-    }
+    return Object.entries(statusCounts)
+      .filter(([, count]) => count > 0)
+      .map(([key, value]) => ({
+        name: capitalize(key),
+        value
+      }));
   }, [pilots]);
 
-  useEffect(() => {
-    if (pilots && statusList && Array.isArray(pilots) && Array.isArray(statusList)) {
-      const filiados = pilots.filter((p) => (p.status || '').toLowerCase() === 'filiado');
-      const totalFiliados = filiados.length;
+  const paymentStatusData = useMemo(() => {
+    if (!pilots || !statusList || !Array.isArray(pilots) || !Array.isArray(statusList)) return [];
+    
+    const filiados = pilots.filter((p) => (p.status || '').toLowerCase() === 'filiado');
+    const totalFiliados = filiados.length;
 
-      if (totalFiliados === 0) {
-        setPaymentStatusData([]);
-        return;
-      }
+    if (totalFiliados === 0) return [];
 
-      const statusListUserIds = new Set(statusList.map((s) => s.userId));
-      let emDiaCount = 0;
-      filiados.forEach((f) => {
-        if (statusListUserIds.has(f.userId)) emDiaCount++;
-      });
+    const statusListUserIds = new Set(statusList.map((s) => s.userId));
+    const emDiaCount = filiados.filter((f) => statusListUserIds.has(f.userId)).length;
+    const pendenteCount = totalFiliados - emDiaCount;
 
-      const pendenteCount = totalFiliados - emDiaCount;
-
-      const data = [
-        { name: 'Em dia', value: emDiaCount },
-        { name: 'Pendente', value: pendenteCount }
-      ].filter((d) => d.value > 0);
-
-      setPaymentStatusData(data);
-    }
+    return [
+      { name: 'Em dia', value: emDiaCount },
+      { name: 'Pendente', value: pendenteCount }
+    ].filter((d) => d.value > 0);
   }, [pilots, statusList]);
 
   const isLoading = loadingPilots || loadingStatus;
