@@ -15,7 +15,7 @@ export const parseAmount = (amount: any): number => {
 export const calculateFinancialSummary = (payments: IPaymentMonthly[]) => {
   const totalAmount = payments.reduce((sum, p) => sum + parseAmount(p.amount), 0);
   const paidMonthsCount = new Set(
-    payments.filter(p => p.status === 'Confirmado').map(p => p.ref_month)
+    payments.filter(p => p.status?.toLowerCase() === 'confirmado').map(p => p.ref_month)
   ).size;
   
   return { 
@@ -31,7 +31,7 @@ export const calculateFinancialSummary = (payments: IPaymentMonthly[]) => {
 export const groupPaymentsByBatch = (payments: IPaymentMonthly[]): IPaymentMonthly[][] => {
   const groups: IPaymentMonthly[][] = [];
   const sorted = [...payments]
-    .filter(p => p.status !== 'Confirmado')
+    .filter(p => p.id && p.status?.toLowerCase() !== 'confirmado')
     .sort((a, b) => a.ref_month - b.ref_month);
 
   let currentGroup: IPaymentMonthly[] = [];

@@ -35,7 +35,8 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
   const { doFetch: doNotice } = useFetch<any>({ method: 'POST' });
 
   const getPaymentValue = (type: string): number => {
-    const months = { mensal: 1, trimestral: 3, semestral: 6, anual: 12 }[type as keyof typeof months] || 0;
+    const monthsMap: Record<string, number> = { mensal: 1, trimestral: 3, semestral: 6, anual: 12 };
+    const months = monthsMap[type] || 0;
     return amountMonthly * months;
   };
 

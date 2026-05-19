@@ -152,23 +152,28 @@ export const PaymentMonthly: React.FC<PaymentMonthlyProps> = ({
     if (!confirmingMonth || !isUserIdValid) return;
     setConfirmingLoading(true);
     try {
-      await doConfirm({
+      const result = await doConfirm({
         url: getURI(API.confirmPayment),
         body: { 
           userId: Number(userId), 
-          ref_year: Number(confirmingMonth.year), 
+          ref_year: String(confirmingMonth.year), 
           ref_month: Number(confirmingMonth.month) 
         }
       });
-      setPayments(prev => prev.map(p => 
-        (Number(p.ref_year) === Number(confirmingMonth.year) && p.ref_month === confirmingMonth.month)
-          ? { ...p, status: 'Confirmado', updatedAt: new Date().toISOString() }
-          : p
-      ));
-      setPaymentConfirmed(prev => ({ ...prev, [`${confirmingMonth.year}-${confirmingMonth.month}`]: true }));
+      // Only update local state if the API call actually succeeded
+      if (result) {
+        setPayments(prev => prev.map(p => 
+          (Number(p.ref_year) === Number(confirmingMonth.year) && p.ref_month === confirmingMonth.month)
+            ? { ...p, status: 'Confirmado', updatedAt: new Date().toISOString() }
+            : p
+        ));
+        setPaymentConfirmed(prev => ({ ...prev, [`${confirmingMonth.year}-${confirmingMonth.month}`]: true }));
+        // Re-fetch to ensure data consistency with the database
+        reFetchPayments({ url: getURI(`${API.paymentMonthly}/${userId}?year=${selectedYear === 'all' ? '' : selectedYear}`) });
+      }
       setOpenModal(false);
     } catch (err: any) {
-      // Error handled by useFetch or toast logic if implemented
+      // Error handled by useFetch
     } finally {
       setConfirmingLoading(false);
     }
@@ -178,15 +183,26 @@ export const PaymentMonthly: React.FC<PaymentMonthlyProps> = ({
     if (!actualConfirmingBatch || !isUserIdValid) return;
     setConfirmingLoading(true);
     try {
-      await doConfirm({
+      // Only include real DB records (status 'Confirmar'), not placeholder rows
+      const realPayments = actualConfirmingBatch.filter(p => p.id && p.status === 'Confirmar');
+      if (realPayments.length === 0) {
+        setOpenBatchModal(false);
+        return;
+      }
+      const result = await doConfirm({
         url: getURI(API.confirmPaymentBatch),
-        body: { payments: actualConfirmingBatch.map(p => ({ userId: Number(userId), ref_year: Number(p.ref_year), ref_month: Number(p.ref_month) })) }
+        body: { payments: realPayments.map(p => ({ userId: Number(userId), ref_year: Number(p.ref_year), ref_month: Number(p.ref_month) })) }
       });
-      const batchKeys = new Set(actualConfirmingBatch.map(p => `${p.ref_year}-${p.ref_month}`));
-      setPayments(prev => prev.map(p => batchKeys.has(`${p.ref_year}-${p.ref_month}`) ? { ...p, status: 'Confirmado', updatedAt: new Date().toISOString() } : p));
+      // Only update local state if the API call actually succeeded
+      if (result) {
+        const batchKeys = new Set(realPayments.map(p => `${p.ref_year}-${p.ref_month}`));
+        setPayments(prev => prev.map(p => batchKeys.has(`${p.ref_year}-${p.ref_month}`) ? { ...p, status: 'Confirmado', updatedAt: new Date().toISOString() } : p));
+        // Re-fetch to ensure data consistency with the database
+        reFetchPayments({ url: getURI(`${API.paymentMonthly}/${userId}?year=${selectedYear === 'all' ? '' : selectedYear}`) });
+      }
       setOpenBatchModal(false);
     } catch (err: any) {
-      // Error handled by useFetch or toast logic if implemented
+      // Error handled by useFetch
     } finally {
       setConfirmingLoading(false);
     }
@@ -274,7 +290,7 @@ export const PaymentMonthly: React.FC<PaymentMonthlyProps> = ({
                 <TableBody>
                   {filteredPayments.map((p, i) => {
                     const key = `${p.ref_year}-${p.ref_month}`;
-                    const isConfirmed = p.status === 'Confirmado' || paymentConfirmed[key];
+                    const isConfirmed = p.status === 'Confirmado' || p.status === 'confirmado' || paymentConfirmed[key];
                     const batchInfo = batchMap.get(key);
 
                     return (
@@ -299,8 +315,11 @@ export const PaymentMonthly: React.FC<PaymentMonthlyProps> = ({
                                 <Button size="sm" onClick={() => { setActualConfirmingBatch(batchInfo.batch); setOpenBatchModal(true); }}>Lote ({batchInfo.batch.length})</Button>
                               ) : batchInfo ? <span className="text-[10px] text-muted-foreground">(lote)</span> : (
                                 <div className="flex items-center justify-center gap-2">
-                                  <Switch onCheckedChange={() => { setConfirmingMonth({ year: String(p.ref_year), month: p.ref_month }); setOpenModal(true); }} />
-                                  <span className="text-[10px]">Aprovar</span>
+                                  <Switch 
+                                    disabled={parseAmount(p.amount) <= 0}
+                                    onCheckedChange={() => { setConfirmingMonth({ year: String(p.ref_year), month: p.ref_month }); setOpenModal(true); }} 
+                                  />
+                                  <span className={`text-[10px] ${parseAmount(p.amount) <= 0 ? 'text-muted-foreground/40' : ''}`}>Aprovar</span>
                                 </div>
                               )
                             )}
