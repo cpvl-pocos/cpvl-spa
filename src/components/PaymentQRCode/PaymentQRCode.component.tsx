@@ -35,7 +35,8 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
   const { doFetch: doNotice } = useFetch<any>({ method: 'POST' });
 
   const getPaymentValue = (type: string): number => {
-    const months = { mensal: 1, trimestral: 3, semestral: 6, anual: 12 }[type as keyof typeof months] || 0;
+    const monthsMap: Record<string, number> = { mensal: 1, trimestral: 3, semestral: 6, anual: 12 };
+    const months = monthsMap[type] || 0;
     return amountMonthly * months;
   };
 
@@ -131,28 +132,28 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
         <CardContent className="p-0">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
             <div className="md:col-span-5 space-y-6">
-              <div className="bg-white/40 backdrop-blur-md border border-white/20 rounded-[2.5rem] p-6 shadow-sm">
+              <div className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-white/20 dark:border-slate-800/40 rounded-[2.5rem] p-6 shadow-sm">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-2.5 bg-primary/10 rounded-2xl text-primary"><CreditCard size={22} /></div>
-                  <div><h3 className="font-black text-slate-900 leading-tight">Pagamento</h3><p className="text-xs text-muted-foreground">Escolha o período</p></div>
+                  <div><h3 className="font-black text-slate-900 dark:text-slate-100 leading-tight">Pagamento</h3><p className="text-xs text-muted-foreground dark:text-slate-300">Escolha o período</p></div>
                 </div>
 
                 {totalMissing > 0 ? (
                   <div className="space-y-5">
                     <div className="space-y-2">
-                      <Label className="text-sm font-bold ml-1 text-slate-700">Selecione o plano</Label>
+                      <Label className="text-sm font-bold ml-1 text-slate-700 dark:text-slate-300">Selecione o plano</Label>
                       <Select value={selectedPaymentType} onValueChange={setSelectedPaymentType}>
-                        <SelectTrigger className="h-14 bg-white/50 border-slate-200 rounded-2xl font-medium">
+                        <SelectTrigger className="h-14 bg-white/50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 rounded-2xl font-medium">
                           <SelectValue placeholder="Escolher..." />
                         </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-slate-100 shadow-2xl">
+                        <SelectContent className="rounded-2xl border-slate-100 dark:border-slate-800 shadow-2xl">
                           {types.map((type) => (
                             <SelectItem key={type} value={type} className="rounded-xl py-3">
                               <div className="flex items-center justify-between w-full min-w-[200px] gap-4">
-                                <span className="capitalize font-bold">{type}</span>
+                                <span className="capitalize font-bold dark:text-slate-200">{type}</span>
                                 <div className="flex items-center gap-2">
                                   {getDiscount(type) > 0 && <Badge variant="success">-{getDiscount(type) * 100}%</Badge>}
-                                  <span className="text-slate-900 font-black">R$ {calculateFinalValue(type).toFixed(2)}</span>
+                                  <span className="text-slate-900 dark:text-slate-100 font-black">R$ {calculateFinalValue(type).toFixed(2)}</span>
                                 </div>
                               </div>
                             </SelectItem>
@@ -162,25 +163,27 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
                     </div>
 
                     {selectedPaymentType && (
-                      <div className="bg-primary/5 rounded-2xl p-4 border border-primary/10 animate-in slide-in-from-left-2">
+                      <div className="bg-primary/5 dark:bg-slate-900/60 rounded-2xl p-4 border border-primary/10 dark:border-slate-800 animate-in slide-in-from-left-2">
                         <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs font-bold text-primary/60 uppercase tracking-widest">Total</span>
-                          <span className="text-xl font-black text-primary">R$ {currentValue.toFixed(2)}</span>
+                          <span className="text-xs font-bold text-primary/60 dark:text-slate-300 uppercase tracking-widest">Total</span>
+                          <span className="text-xl font-black text-primary dark:text-white">R$ {currentValue.toFixed(2)}</span>
                         </div>
-                        {currentDiscount > 0 && <p className="text-[10px] text-green-600 font-bold italic">* Desconto aplicado!</p>}
+                        {currentDiscount > 0 && <p className="text-[10px] text-green-600 dark:text-green-400 font-bold italic">* Desconto aplicado!</p>}
                       </div>
                     )}
 
-                    <div className="flex items-start gap-2 p-3 bg-amber-50 rounded-2xl border border-amber-100">
-                      <AlertCircle size={14} className="text-amber-600 shrink-0 mt-0.5" />
-                      <p className="text-[10px] text-amber-700 leading-tight">Confira o nome <b>CPVL</b> e CNPJ <b>02.507.679/0001-35</b> antes de confirmar.</p>
+                    <div className="flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-950/40 rounded-2xl border border-amber-100 dark:border-amber-900/40">
+                      <AlertCircle size={14} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                      <p className="text-[10px] text-amber-700 dark:text-amber-300 leading-tight font-medium">
+                        Confira o nome <span className="font-black text-amber-900 dark:text-amber-200">CPVL</span> e CNPJ <span className="font-black text-amber-900 dark:text-amber-200">02.507.679/0001-35</span> antes de confirmar.
+                      </p>
                     </div>
                   </div>
                 ) : (
                   <div className="py-8 text-center flex flex-col items-center">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-4"><ShieldCheck size={32} /></div>
-                    <h4 className="font-black text-slate-900">Tudo em Dia!</h4>
-                    <p className="text-sm text-muted-foreground mt-1">Sua anuidade está regularizada.</p>
+                    <div className="w-16 h-16 bg-green-100 dark:bg-green-950/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 mb-4"><ShieldCheck size={32} /></div>
+                    <h4 className="font-black text-slate-900 dark:text-slate-100">Tudo em Dia!</h4>
+                    <p className="text-sm text-muted-foreground dark:text-slate-300 mt-1">Sua anuidade está regularizada.</p>
                   </div>
                 )}
               </div>
@@ -190,7 +193,7 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
               {selectedPaymentType ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-in zoom-in-95">
                   <div className="flex flex-col items-center gap-4">
-                    <div className="relative p-5 bg-white rounded-[2.5rem] shadow-xl border-4 border-slate-50 ring-1 ring-slate-100 group">
+                    <div className="relative p-5 bg-white rounded-[2.5rem] shadow-xl border-4 border-slate-50 dark:border-slate-800 ring-1 ring-slate-100 dark:ring-slate-700/50 group">
                       <QRCodePix
                         pixkey={import.meta.env.VITE_PIX_KEY_CPVL || ''}
                         merchant="CPVL" city="POCOS CALDAS" cep="37701000"
@@ -199,20 +202,20 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
                       />
                     </div>
                     <div className="flex flex-col items-center gap-1">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Aponte a câmera</span>
-                      <div className="text-2xl font-black text-slate-900">R$ {currentValue.toFixed(2)}</div>
+                      <span className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">Aponte a câmera</span>
+                      <div className="text-2xl font-black text-slate-900 dark:text-slate-100">R$ {currentValue.toFixed(2)}</div>
                     </div>
                   </div>
 
                   <div className="flex flex-col justify-center space-y-6">
                     <div className="space-y-3">
                       <div className="flex items-center gap-2">
-                        <div className="p-1 px-2 bg-slate-900 text-white rounded-lg font-black text-[9px]">PIX</div>
-                        <span className="text-xs font-bold text-slate-500 italic">Copia e Cola</span>
+                        <div className="p-1 px-2 bg-slate-900 dark:bg-slate-800 text-white dark:text-slate-200 rounded-lg font-black text-[9px]">PIX</div>
+                        <span className="text-xs font-bold text-slate-500 dark:text-slate-400 italic">Copia e Cola</span>
                       </div>
                       <Button
                         variant="outline"
-                        className={cn("w-full h-14 rounded-2xl border-slate-200 text-slate-700 font-bold transition-all px-5 justify-between", copied && "border-green-500 bg-green-50 text-green-700")}
+                        className={cn("w-full h-14 rounded-2xl border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold transition-all px-5 justify-between", copied && "border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400")}
                         onClick={copyToClipboard}
                         disabled={!pixCode}
                       >
@@ -221,7 +224,7 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
                       </Button>
                     </div>
 
-                    <div className="space-y-4 pt-4 border-t border-slate-100">
+                    <div className="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800/80">
                       <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-primary animate-pulse" /><span className="text-xs font-black text-primary uppercase tracking-widest">Finalizar</span></div>
                       <Button
                         variant="warning"
@@ -238,10 +241,10 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="h-full min-h-[300px] flex flex-col items-center justify-center bg-slate-50/50 border-2 border-dashed border-slate-200 rounded-[3rem] p-10 text-center">
-                  <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center text-slate-300 mb-6 shadow-sm"><QrCode size={40} /></div>
-                  <h4 className="text-slate-400 font-bold mb-2 uppercase tracking-widest text-sm">Aguardando Plano</h4>
-                  <p className="text-slate-400 text-xs px-10">Escolha um plano ao lado para gerar o QR Code de pagamento.</p>
+                <div className="h-full min-h-[300px] flex flex-col items-center justify-center bg-slate-50/50 dark:bg-slate-950/10 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-[3rem] p-10 text-center">
+                  <div className="w-20 h-20 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center text-slate-300 dark:text-slate-700 mb-6 shadow-sm"><QrCode size={40} /></div>
+                  <h4 className="text-slate-400 dark:text-slate-500 font-bold mb-2 uppercase tracking-widest text-sm">Aguardando Plano</h4>
+                  <p className="text-slate-400 dark:text-slate-500 text-xs px-10">Escolha um plano ao lado para gerar o QR Code de pagamento.</p>
                 </div>
               )}
             </div>

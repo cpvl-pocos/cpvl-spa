@@ -47,7 +47,7 @@ export const PilotDetails = () => {
   });
 
   const { profile } = useAuth();
-  const isAdmin = profile?.user?.role === 'admin' || 
+  const isAdmin = profile?.user?.role === 'admin' ||
     profile?.routes?.some((r) => r.route === 'pilots');
 
   useEffect(() => {

@@ -16,7 +16,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [profile, setProfile] = useState<IProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isLogged, setIsLogged] = useSessionStorage(
     (import.meta.env.VITE_LOGGED_KEY || 'CPVL_USER_IS_LOGGED') as string,
     false
@@ -46,14 +46,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const data = await doFetch({ url: getURI(API.profile) });
       if (data) {
         setProfile(data);
+      } else {
+        // If doFetch returned undefined/null, the session is likely invalid/expired
+        logout();
       }
     } catch (error) {
       console.error('Failed to fetch profile:', error);
-      setProfile(null);
+      logout();
     } finally {
       setLoading(false);
     }
-  }, [doFetch]);
+  }, [doFetch, logout]);
 
   useEffect(() => {
     if (isLogged && !profile && !loading) {
