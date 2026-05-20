@@ -10,8 +10,15 @@ import useFetch from "@/hooks/useFetch";
 import { useAuth } from "@/context/AuthContext";
 import { API, getURI } from "@/services/getURI";
 import bgImage from "@/assets/images/hero_01.jpg";
+import { useSEO } from "@/hooks/useSEO";
 
 export const Login = () => {
+  useSEO({
+    title: "Login de Associados",
+    description: "Área restrita para associados do Clube Poços-Caldense de Voo Livre (CPVL). Acesse seu painel de piloto.",
+    noindex: true
+  });
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
