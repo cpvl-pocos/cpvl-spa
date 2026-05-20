@@ -38,10 +38,10 @@ describe('calculateFinancialSummary', () => {
 describe('groupPaymentsByBatch', () => {
   it('should group contiguous unpaid months into batches of at least 3', () => {
     const payments: IPaymentMonthly[] = [
-      { ref_year: '2026', ref_month: 1, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
-      { ref_year: '2026', ref_month: 2, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
-      { ref_year: '2026', ref_month: 3, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
-      { ref_year: '2026', ref_month: 5, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
+      { id: 1, ref_year: '2026', ref_month: 1, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
+      { id: 2, ref_year: '2026', ref_month: 2, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
+      { id: 3, ref_year: '2026', ref_month: 3, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
+      { id: 4, ref_year: '2026', ref_month: 5, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
     ];
     const batches = groupPaymentsByBatch(payments);
     expect(batches.length).toBe(1);
@@ -51,8 +51,8 @@ describe('groupPaymentsByBatch', () => {
 
   it('should not group if less than 3 contiguous months', () => {
     const payments: IPaymentMonthly[] = [
-      { ref_year: '2026', ref_month: 1, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
-      { ref_year: '2026', ref_month: 2, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
+      { id: 1, ref_year: '2026', ref_month: 1, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
+      { id: 2, ref_year: '2026', ref_month: 2, status: 'Pendente', type: 'mensal' } as IPaymentMonthly,
     ];
     const batches = groupPaymentsByBatch(payments);
     expect(batches.length).toBe(0);
