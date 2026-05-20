@@ -58,7 +58,7 @@ export const Newpassword = () => {
       } else {
         setError(result.message || 'Erro ao redefinir senha.');
       }
-    } catch (err) {
+    } catch {
       setError('Erro de conexão com o servidor.');
     } finally {
       setIsLoading(false);

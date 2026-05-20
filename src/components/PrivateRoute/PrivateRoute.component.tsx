@@ -6,6 +6,6 @@ export const PrivateRoutes = () => {
     import.meta.env.VITE_LOGGED_KEY || 'CPVL_USER_IS_LOGGED',
     false
   );
-  return !Boolean(isLogged) ? <Navigate to="/login" /> : <Outlet />;
+  return !isLogged ? <Navigate to="/login" /> : <Outlet />;
 };
 
