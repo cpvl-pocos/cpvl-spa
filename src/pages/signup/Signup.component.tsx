@@ -26,6 +26,7 @@ import {
 } from '@/util/validation';
 import { Users, ArrowLeft } from "lucide-react";
 import bgImage from "@/assets/images/hero_02.jpg";
+import { useSEO } from "@/hooks/useSEO";
 
 interface IInsertBody {
   name: string;
@@ -53,6 +54,12 @@ const initialState: IInsertBody = {
 };
 
 export const Signup: React.FC = () => {
+  useSEO({
+    title: "Filiação de Pilotos",
+    description: "Faça seu cadastro e filie-se ao Clube Poços-Caldense de Voo Livre (CPVL) para usufruir da melhor infraestrutura aérea.",
+    noindex: true
+  });
+
   const navigate = useNavigate();
 
   const [formState, setFormState] = useState<IInsertBody>(initialState);

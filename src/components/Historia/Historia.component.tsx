@@ -59,7 +59,7 @@ export const Historia = () => {
               <div className="my-12">
                 <img
                   src={bainaoImage}
-                  alt="Diretoria CPVL 2024-2025"
+                  alt="Piloto de voo livre decolando ao sul de Poços de Caldas"
                   className="rounded-xl shadow-lg w-full max-h-80 object-cover"
                 />
               </div>

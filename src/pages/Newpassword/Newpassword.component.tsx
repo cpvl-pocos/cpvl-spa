@@ -8,8 +8,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useSEO } from "@/hooks/useSEO";
 
 export const Newpassword = () => {
+  useSEO({
+    title: "Recuperar Senha",
+    description: "Recupere o acesso à sua conta de piloto no CPVL.",
+    noindex: true
+  });
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');

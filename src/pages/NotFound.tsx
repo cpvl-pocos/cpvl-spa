@@ -1,7 +1,13 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { useSEO } from "@/hooks/useSEO";
 
 const NotFound = () => {
+  useSEO({
+    title: "Página não Encontrada",
+    noindex: true
+  });
+
   const location = useLocation();
 
   useEffect(() => {
