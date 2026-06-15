@@ -63,10 +63,11 @@ export const Pilots = () => {
   const {
     data: pilotsData,
     error: pilotsError,
-    loading: loadingPilots
+    loading: loadingPilots,
+    doFetch: reFetchPilots
   } = useFetch<IPilot[]>({ url: getURI(API.pilots) });
 
-  const { data: pilotsPaymentData } = useFetch<IPilot[]>({ url: getURI(API.statusPayment) });
+  const { data: pilotsPaymentData, doFetch: reFetchPilotsPayment } = useFetch<IPilot[]>({ url: getURI(API.statusPayment) });
   const { data: statusCadastralData } = useFetch<string[]>({ url: getURI(API.validStatusCadastral) });
   const { data: statusPaymentData } = useFetch<string[]>({ url: getURI(API.validStatusPayment) });
 
@@ -154,7 +155,9 @@ export const Pilots = () => {
       });
       setActionMessage(`Sucesso: ${selectedUserIds.length} piloto(s) atualizado(s).`);
       setSelectedUserIds([]);
-      setTimeout(() => window.location.reload(), 1500);
+      reFetchPilots({ url: getURI(API.pilots) });
+      reFetchPilotsPayment({ url: getURI(API.statusPayment) });
+      setTimeout(() => setActionMessage(null), 3000);
     } catch (err: any) {
       setActionError(err.message || 'Erro ao processar ação em lote');
     } finally {
@@ -181,7 +184,9 @@ export const Pilots = () => {
       setActionMessage(`Sucesso! ${userConfirmPayments.length} pagamento(s) removido(s).`);
       setDeleteModalOpen(false);
       setPilotToDelete(null);
-      setTimeout(() => window.location.reload(), 1500);
+      reFetchPilots({ url: getURI(API.pilots) });
+      reFetchPilotsPayment({ url: getURI(API.statusPayment) });
+      setTimeout(() => setActionMessage(null), 3000);
     } catch (err: any) {
       setActionError(err.message || 'Erro ao remover pagamentos');
     } finally {

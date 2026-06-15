@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Copy, CheckCircle2, ArrowRight, AlertCircle, Truck, QrCode, ShieldCheck, CreditCard } from 'lucide-react';
+import { Copy, CheckCircle2, ArrowRight, AlertCircle, Truck, QrCode, ShieldCheck, CreditCard, Clock } from 'lucide-react';
 import { useFetch } from '@/hooks';
 import { API, getURI } from '@/services';
 import { cn } from '@/lib/utils';
@@ -33,6 +33,15 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
 
   const amountMonthly = 50;
   const { doFetch: doNotice } = useFetch<any>({ method: 'POST' });
+
+  const { data: userPayments, doFetch: fetchPayments } = useFetch<any[]>({
+    url: getURI(`${API.paymentMonthly}/${userId}`),
+    immediate: !!userId
+  });
+
+  const hasPendingConfirmation = userPayments?.some(
+    (p) => p.status === 'Confirmar' || p.status === 'confirmar'
+  );
 
   const getPaymentValue = (type: string): number => {
     const monthsMap: Record<string, number> = { mensal: 1, trimestral: 3, semestral: 6, anual: 12 };
@@ -84,6 +93,7 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
 
       setNotice('Aviso enviado com sucesso!');
       setIsModalOpen(true);
+      fetchPayments({ url: getURI(`${API.paymentMonthly}/${userId}`) });
       setTimeout(() => { setIsModalOpen(false); if (onSuccess) onSuccess(); }, 5000);
     } catch (err) {
       setNotice('Erro ao enviar aviso.');
@@ -138,7 +148,20 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
                   <div><h3 className="font-black text-slate-900 dark:text-slate-100 leading-tight">Pagamento</h3><p className="text-xs text-muted-foreground dark:text-slate-300">Escolha o período</p></div>
                 </div>
 
-                {totalMissing > 0 ? (
+                 {hasPendingConfirmation ? (
+                  <div className="py-8 text-center flex flex-col items-center">
+                    <div className="w-16 h-16 bg-amber-100 dark:bg-amber-950/30 rounded-full flex items-center justify-center text-amber-600 dark:text-amber-400 mb-4">
+                      <Clock size={32} />
+                    </div>
+                    <h4 className="font-black text-slate-900 dark:text-slate-100">Aguardando Confirmação</h4>
+                    <p className="text-xs text-muted-foreground dark:text-slate-300 mt-2 px-2">
+                      Você possui pagamento(s) aguardando confirmação.
+                    </p>
+                    <p className="text-[10px] text-muted-foreground dark:text-slate-400 mt-1 px-2">
+                      Aguarde a validação do administrador antes de realizar um novo pagamento.
+                    </p>
+                  </div>
+                ) : totalMissing > 0 ? (
                   <div className="space-y-5">
                     <div className="space-y-2">
                       <Label className="text-sm font-bold ml-1 text-slate-700 dark:text-slate-300">Selecione o plano</Label>
@@ -190,7 +213,13 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
             </div>
 
             <div className="md:col-span-7">
-              {selectedPaymentType ? (
+              {hasPendingConfirmation ? (
+                <div className="h-full min-h-[300px] flex flex-col items-center justify-center bg-amber-50/10 dark:bg-amber-950/10 border-2 border-dashed border-amber-200 dark:border-amber-800 rounded-[3rem] p-10 text-center">
+                  <div className="w-20 h-20 rounded-full bg-white dark:bg-slate-900 flex items-center justify-center text-amber-500 dark:text-amber-400 mb-6 shadow-sm"><Clock size={40} /></div>
+                  <h4 className="text-amber-600 dark:text-amber-500 font-bold mb-2 uppercase tracking-widest text-sm">Confirmação Pendente</h4>
+                  <p className="text-slate-500 dark:text-slate-400 text-xs px-10">Por favor, aguarde a aprovação do seu pagamento anterior pelo administrador.</p>
+                </div>
+              ) : selectedPaymentType ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 animate-in zoom-in-95">
                   <div className="flex flex-col items-center gap-4">
                     <div className="relative p-5 bg-white rounded-[2.5rem] shadow-xl border-4 border-slate-50 dark:border-slate-800 ring-1 ring-slate-100 dark:ring-slate-700/50 group">
