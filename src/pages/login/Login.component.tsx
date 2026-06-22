@@ -79,7 +79,7 @@ export const Login = () => {
 
     if (!email || !email.includes("@")) {
       setFeedback({
-        message: "No campo Usuário ou E-mail, digite seu E-MAIL para recuperar a senha.",
+        message: "Digite seu E-MAIL para recuperar a senha.",
         type: "error",
       });
       return;
