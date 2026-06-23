@@ -44,7 +44,7 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
   );
 
   const getPaymentValue = (type: string): number => {
-    const monthsMap: Record<string, number> = { mensal: 1, trimestral: 3, semestral: 6, anual: 12 };
+    const monthsMap: Record<string, number> = { mensal: 1, bimestral: 2, trimestral: 3, semestral: 6, anual: 12 };
     const months = monthsMap[type] || 0;
     return amountMonthly * months;
   };
@@ -114,9 +114,13 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
   const availableTypes = (tm: number) => {
     if (!tm || tm <= 0) return [];
     const t = [];
+    const currentMonth = new Date().getMonth(); // 0 = Jan, 6 = Jul
+    const isJanOrJul = currentMonth === 0 || currentMonth === 6;
+
     if (tm >= 1) t.push('mensal');
+    if (tm >= 2) t.push('bimestral');
     if (tm >= 3) t.push('trimestral');
-    if (tm >= 6) t.push('semestral');
+    if (tm >= 6 && isJanOrJul) t.push('semestral');
     if (tm === 12) t.push('anual');
     return t;
   };
