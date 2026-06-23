@@ -19,6 +19,7 @@ export const Login = () => {
     noindex: true
   });
 
+  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -154,7 +155,18 @@ export const Login = () => {
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <form id="login-form" onSubmit={handleLogin} className="space-y-4">
+            <form
+              id="login-form"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (isRecoveryMode) {
+                  handleForgotPassword();
+                } else {
+                  handleLogin();
+                }
+              }}
+              className="space-y-4"
+            >
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-white/80 text-sm font-medium ml-1">Usuário ou E-mail</Label>
                 <div className="relative group">
@@ -173,39 +185,44 @@ export const Login = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex justify-between items-center ml-1">
-                  <Label htmlFor="password" className="text-white/80 text-sm font-medium">Senha</Label>
-                  <button
-                    type="button"
-                    onClick={handleForgotPassword}
-                    disabled={isForgotLoading}
-                    className="text-xs text-white/80 hover:text-white transition-colors disabled:opacity-50 cursor-pointer"
-                  >
-                    {isForgotLoading ? "Solicitando..." : "Esqueceu a senha?"}
-                  </button>
-                </div>
-                <div className="relative group">
-                  <div className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-primary transition-colors">
-                    <Lock size={18} />
+              {!isRecoveryMode && (
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center ml-1">
+                    <Label htmlFor="password" className="text-white/80 text-sm font-medium">Senha</Label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsRecoveryMode(true);
+                        setFeedback(null);
+                        clearError();
+                      }}
+                      className="text-xs text-white/80 hover:text-white transition-colors cursor-pointer"
+                    >
+                      Esqueceu a senha?
+                    </button>
                   </div>
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="bg-white/5 border-white/10 text-white placeholder:text-white/20 pl-10 pr-10 h-12 focus:ring-primary focus:border-primary transition-all duration-300"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors cursor-pointer"
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
+                  <div className="relative group">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-primary transition-colors">
+                      <Lock size={18} />
+                    </div>
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required={!isRecoveryMode}
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/20 pl-10 pr-10 h-12 focus:ring-primary focus:border-primary transition-all duration-300"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors cursor-pointer"
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {error && (
                 <div className="flex items-center gap-3 rounded-xl border border-orange-500/50 bg-orange-500/20 backdrop-blur-md p-4 text-sm text-white shadow-xl animate-shake">
@@ -228,18 +245,45 @@ export const Login = () => {
 
               <Button
                 type="submit"
-                disabled={isLoggingIn || loading}
+                disabled={isRecoveryMode ? (isForgotLoading || loading) : (isLoggingIn || loading)}
                 className="w-full h-12 text-base font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-300 active:scale-[0.98] cursor-pointer"
               >
-                {isLoggingIn || loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Verificando credenciais...
-                  </>
+                {isRecoveryMode ? (
+                  isForgotLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Solicitando...
+                    </>
+                  ) : (
+                    "Recuperar senha"
+                  )
                 ) : (
-                  "Entrar no Sistema"
+                  isLoggingIn || loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Verificando credenciais...
+                    </>
+                  ) : (
+                    "Entrar no Sistema"
+                  )
                 )}
               </Button>
+
+              {isRecoveryMode && (
+                <div className="text-center pt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsRecoveryMode(false);
+                      setFeedback(null);
+                      clearError();
+                    }}
+                    className="text-sm text-white/80 hover:text-white underline transition-colors cursor-pointer"
+                  >
+                    Voltar para o login
+                  </button>
+                </div>
+              )}
             </form>
           </CardContent>
 
