@@ -99,9 +99,13 @@ export const Login = () => {
       const result = await response.json();
       if (response.ok) {
         setFeedback({
-          message: "E-mail de recuperação enviado! Verifique sua caixa de entrada.",
+          message: "Link de recuperação enviado! Verifique seu E-mail.",
           type: "success",
         });
+        setTimeout(() => {
+          setIsRecoveryMode(false);
+          setFeedback(null);
+        }, 4000);
       } else {
         setFeedback({
           message: result.message || "Erro ao solicitar recuperação.",
@@ -255,7 +259,7 @@ export const Login = () => {
                       Solicitando...
                     </>
                   ) : (
-                    "Recuperar senha"
+                    "Recuperar Senha"
                   )
                 ) : (
                   isLoggingIn || loading ? (
