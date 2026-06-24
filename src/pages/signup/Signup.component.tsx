@@ -22,7 +22,8 @@ import {
   isNotEmpty,
   isEqualToOtherValue,
   hasMinLength,
-  hasTwoWords
+  hasTwoWords,
+  isValidCPF
 } from '@/util/validation';
 import { Users, ArrowLeft } from "lucide-react";
 import bgImage from "@/assets/images/hero_02.jpg";
@@ -137,6 +138,8 @@ export const Signup: React.FC = () => {
       errorMessages.push('CPF é obrigatório');
     } else if (stripNonDigits(cpf).length !== 11) {
       errorMessages.push('CPF deve ter exatamente 11 dígitos');
+    } else if (!isValidCPF(cpf)) {
+      errorMessages.push('CPF inválido');
     }
 
     // Telefone

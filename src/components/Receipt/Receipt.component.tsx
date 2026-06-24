@@ -34,6 +34,7 @@ export const Receipt: React.FC<ReceiptProps> = ({ payment, pilot }) => {
   const getPaymentTypeLabel = (type: string): string => {
     const typeMap: Record<string, string> = {
       mensal: 'mensalidade',
+      bimestral: 'bimestre',
       trimestral: 'trimestre',
       semestral: 'semestre',
       anual: 'anuidade'
