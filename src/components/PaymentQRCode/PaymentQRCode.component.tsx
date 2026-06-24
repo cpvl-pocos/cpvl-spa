@@ -136,7 +136,7 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
           <DialogHeader className="flex flex-col items-center">
             <div className="bg-green-100 p-4 rounded-full mb-4"><CheckCircle2 className="h-10 w-10 text-green-600" /></div>
             <DialogTitle className="text-2xl font-black text-slate-900">Aviso Enviado!</DialogTitle>
-            <DialogDescription className="text-center text-slate-600 pt-2 pb-4">A administração foi notificada. O status será atualizado após a conferência bancária.</DialogDescription>
+            <DialogDescription className="text-center text-slate-600 pt-2 pb-4">A tesouraria foi notificada. O status será atualizado em breve.</DialogDescription>
             <Button onClick={() => setIsModalOpen(false)} className="w-full rounded-2xl h-12 font-bold">Entendido</Button>
           </DialogHeader>
         </DialogContent>
@@ -152,7 +152,7 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
                   <div><h3 className="font-black text-slate-900 dark:text-slate-100 leading-tight">Pagamento</h3><p className="text-xs text-muted-foreground dark:text-slate-300">Escolha o período</p></div>
                 </div>
 
-                 {hasPendingConfirmation ? (
+                {hasPendingConfirmation ? (
                   <div className="py-8 text-center flex flex-col items-center">
                     <div className="w-16 h-16 bg-amber-100 dark:bg-amber-950/30 rounded-full flex items-center justify-center text-amber-600 dark:text-amber-400 mb-4">
                       <Clock size={32} />
