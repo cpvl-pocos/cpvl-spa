@@ -128,12 +128,13 @@ export const PilotDetails = () => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 xxl:grid-cols-3 gap-8">
         {/* Profile Info Side */}
         <div className="xl:col-span-1 space-y-6">
           <Card className="rounded-[40px] border-none shadow-[0_20px_60px_rgba(0,0,0,0.05)] bg-white/70 backdrop-blur-xl overflow-hidden relative group">
             <div className="absolute top-0 left-0 w-full h-24 bg-linear-to-br from-primary/10 to-primary/5 transition-all group-hover:h-28" />
-            <CardContent className="pt-8 relative flex flex-col items-center text-center px-6 pb-10">
+
+            <CardContent className="relative flex flex-col items-center text-center px-6 pb-9">
               <Avatar className="w-32 h-32 border-8 border-white shadow-2xl mb-6 ring-1 ring-slate-100">
                 <AvatarImage src={pilot.photoUrl} alt={pilot.firstName} className="object-cover" />
                 <AvatarFallback className="bg-slate-50 text-slate-300">
@@ -144,7 +145,7 @@ export const PilotDetails = () => {
               <h2 className="text-2xl font-black text-slate-900 mb-1 leading-tight">{pilot.firstName} {pilot.lastName}</h2>
               <p className="text-slate-400 font-bold text-sm uppercase tracking-widest mb-6 border-b border-primary/5 pb-4 w-full">Pilot ID #{pilot.userId}</p>
 
-              <div className="w-full space-y-4 text-left">
+              <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1 gap-1 mt-0 w-full text-center">
                 <div className="flex items-center gap-4 bg-slate-50/50 p-3 rounded-2xl hover:bg-slate-50 transition-colors group/item">
                   <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
                     <CreditCard className="w-5 h-5" />
@@ -166,7 +167,7 @@ export const PilotDetails = () => {
                 </div>
 
                 <div className="flex items-center gap-4 bg-slate-50/50 p-3 rounded-2xl hover:bg-slate-50 transition-colors group/item overflow-hidden">
-                  <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all flex-shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
@@ -176,30 +177,53 @@ export const PilotDetails = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1 gap-2 mt-8 w-full">
-                <Button
-                  variant="outline"
-                  onClick={() => setIsLicenseDataOpen(true)}
-                  className="inline-flex items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-400 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
-                >
-                  <Settings className="w-4 h-4" /> Documentação
-                </Button>
 
-                <Button
-                  variant="outline"
-                  onClick={() => setIsEmergencyContactOpen(true)}
-                  className="inline-flex items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-400 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
-                >
-                  <Settings className="w-4 h-4" /> Emergência
-                </Button>
+              <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1 gap-1 mt-3 w-full text-center">
+                <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-colors group/item">
+                  <div className="w-10 h-10 rounded-xl bg-blue shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
+                    <Settings className="w-5 h-5" />
+                  </div>
+                  <div className="w-full">
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsLicenseDataOpen(true)}
+                      className="items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-500 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
+                    >
+                      Documentação
+                    </Button>
+                  </div>
+                </div>
 
-                <Button
-                  variant="outline"
-                  onClick={() => setIsEditModalOpen(true)}
-                  className="inline-flex items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-400 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
-                >
-                  <Settings className="w-4 h-4" /> Perfil
-                </Button>
+                <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-colors group/item">
+                  <div className="w-10 h-10 rounded-xl bg-blue shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
+                    <Settings className="w-5 h-5" />
+                  </div>
+                  <div className="w-full">
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsEmergencyContactOpen(true)}
+                      className="items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-500 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
+                    >
+                      Emergência
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-colors group/item">
+                  <div className="w-10 h-10 rounded-xl bg-blue shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
+                    <Settings className="w-5 h-5" />
+                  </div>
+                  <div className="w-full">
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsEditModalOpen(true)}
+                      className="items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-500 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
+                    >
+                      Perfil
+                    </Button>
+                  </div>
+                </div>
+
               </div>
             </CardContent>
           </Card>
