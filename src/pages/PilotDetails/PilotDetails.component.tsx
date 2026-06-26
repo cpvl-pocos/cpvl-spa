@@ -145,7 +145,7 @@ export const PilotDetails = () => {
               <h2 className="text-2xl font-black text-slate-900 mb-1 leading-tight">{pilot.firstName} {pilot.lastName}</h2>
               <p className="text-slate-400 font-bold text-sm uppercase tracking-widest mb-6 border-b border-primary/5 pb-4 w-full">Pilot ID #{pilot.userId}</p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1 gap-1 mt-0 w-full text-center">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 mt-0 w-full text-center">
                 <div className="flex items-center gap-4 bg-slate-50/50 p-3 rounded-2xl hover:bg-slate-50 transition-colors group/item">
                   <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
                     <CreditCard className="w-5 h-5" />
@@ -178,7 +178,7 @@ export const PilotDetails = () => {
               </div>
 
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1 gap-1 mt-3 w-full text-center">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 mt-3 w-full text-center">
                 <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-colors group/item">
                   <div className="w-10 h-10 rounded-xl bg-blue shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
                     <Settings className="w-5 h-5" />
