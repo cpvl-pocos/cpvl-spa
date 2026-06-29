@@ -233,16 +233,11 @@ export const PilotDetails = () => {
         <div className="xl:col-span-2">
           <Card className="rounded-[40px] border-none shadow-[0_20px_60px_rgba(0,0,0,0.05)] bg-white/70 backdrop-blur-xl overflow-hidden min-h-[600px]">
             <CardHeader className="p-8 border-b border-white/50 bg-white/30">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4 text-primary">
-                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-black shadow-lg shadow-primary/20">
-                    $
-                  </div>
-                  <CardTitle className="text-2xl font-black tracking-tight">Histórico de Mensalidades</CardTitle>
+              <div className="flex items-center gap-4 text-primary">
+                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-black shadow-lg shadow-primary/20">
+                  $
                 </div>
-                <Badge variant="secondary" className="rounded-full shadow-inner bg-slate-100/50 border-white px-4 font-bold">
-                  Auto-updated
-                </Badge>
+                <CardTitle className="text-2xl font-black tracking-tight">Histórico de Mensalidades</CardTitle>
               </div>
             </CardHeader>
             <CardContent className="p-0">
