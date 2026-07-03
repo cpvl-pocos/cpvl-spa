@@ -26,7 +26,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
       size="icon"
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       className={cn(
-        "relative rounded-full w-10 h-10 transition-all duration-300 overflow-hidden group bg-transparent",
+        "relative rounded-full w-10 h-10 transition-all duration-300 overflow-hidden group bg-transparent cursor-pointer",
         className
       )}
       aria-label="Alternar tema"

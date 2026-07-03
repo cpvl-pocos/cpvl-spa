@@ -83,7 +83,7 @@ export const StatusPilot = ({
           onClick={handleUpdateStatus}
           disabled={loading || status === currentStatus}
           size="sm"
-          className="h-9 rounded-xl gap-2 font-bold px-4"
+          className="h-9 rounded-xl gap-2 font-bold px-4 cursor-pointer"
         >
           {loading ? (
             <Spinner className="h-4 w-4" />

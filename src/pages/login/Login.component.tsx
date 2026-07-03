@@ -135,7 +135,7 @@ export const Login = () => {
         {/* Back button */}
         <button
           onClick={() => navigate("/")}
-          className="group mb-6 flex items-center gap-2 text-white/70 hover:text-white transition-colors duration-300 text-sm font-medium"
+          className="group mb-6 flex items-center gap-2 text-white/70 hover:text-white transition-colors duration-300 text-sm font-medium cursor-pointer"
         >
           <div className="p-1.5 rounded-full bg-white/10 group-hover:bg-white/20 transition-colors">
             <ArrowLeft size={16} />

@@ -215,8 +215,8 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
                       <div className="space-y-3">
                         <Label className="text-[9px] font-black uppercase text-slate-400 tracking-wider">Anexo do Documento</Label>
                         <div className="flex items-center gap-3">
-                          <Button type="button" variant="outline" className={cn("flex-1 h-11 rounded-xl border-slate-100 font-bold transition-all relative text-xs", formState[field] ? "bg-primary/5 border-primary/20 text-primary" : "hover:bg-primary/5")} asChild><label className="cursor-pointer"><FileUp className="mr-2 h-4 w-4" />{formState[field] ? 'Substituir' : 'Enviar Documento'}<input type="file" className="hidden" accept="image/*,.pdf" onChange={(e) => handleFileUpload(e, field)} /></label></Button>
-                          {formState[field] && <Button type="button" variant="destructive" size="icon" className="h-11 w-11 rounded-xl" onClick={() => setFormState(prev => ({ ...prev, [field]: '' }))}><Trash2 className="h-4 w-4" /></Button>}
+                          <Button type="button" variant="outline" className={cn("flex-1 h-11 rounded-xl border-slate-100 font-bold transition-all relative text-xs cursor-pointer", formState[field] ? "bg-primary/5 border-primary/20 text-primary" : "hover:bg-primary/5")} asChild><label className="cursor-pointer"><FileUp className="mr-2 h-4 w-4" />{formState[field] ? 'Substituir' : 'Enviar Documento'}<input type="file" className="hidden" accept="image/*,.pdf" onChange={(e) => handleFileUpload(e, field)} /></label></Button>
+                          {formState[field] && <Button type="button" variant="destructive" size="icon" className="h-11 w-11 rounded-xl cursor-pointer" onClick={() => setFormState(prev => ({ ...prev, [field]: '' }))}><Trash2 className="h-4 w-4" /></Button>}
                         </div>
                         {formState[field] && <div className="flex items-center gap-2 text-green-600 animate-in fade-in"><CheckCircle2 size={12} strokeWidth={3} /><span className="text-[9px] font-black uppercase tracking-widest">Anexado</span></div>}
                       </div>
@@ -229,10 +229,10 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
 
           <div className="flex gap-4 pt-6">
             <div className="flex gap-3 flex-1">
-              {onClose && <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black text-slate-400">VOLTAR</Button>}
-              <Button type="button" variant="outline" onClick={handleClear} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black border-slate-200 text-slate-500"><Eraser className="mr-2 h-4 w-4" />LIMPAR</Button>
+              {onClose && <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black text-slate-400 cursor-pointer">VOLTAR</Button>}
+              <Button type="button" variant="outline" onClick={handleClear} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black border-slate-200 text-slate-500 cursor-pointer"><Eraser className="mr-2 h-4 w-4" />LIMPAR</Button>
             </div>
-            <Button type="submit" disabled={isSubmitting} className="flex-1 max-w-[240px] rounded-2xl h-12 font-black shadow-xl">{isSubmitting ? <Spinner className="mr-2 h-4 w-4" /> : <Save className="mr-2 h-5 w-5" />}SALVAR DADOS</Button>
+            <Button type="submit" disabled={isSubmitting} className="flex-1 max-w-[240px] rounded-2xl h-12 font-black shadow-xl cursor-pointer">{isSubmitting ? <Spinner className="mr-2 h-4 w-4" /> : <Save className="mr-2 h-5 w-5" />}SALVAR DADOS</Button>
           </div>
         </form>
       </div>

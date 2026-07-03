@@ -81,7 +81,7 @@ export const PaymentDetails = () => {
           <AlertDescription className="font-medium">
             Ocorreu um erro ao carregar os dados de pagamento. Verifique se o ID está correto.
           </AlertDescription>
-          <Button variant="outline" onClick={() => navigate('/dashboard/pilots')} className="mt-4 border-red-200 text-red-700 bg-red-50 hover:bg-red-100 rounded-xl font-bold">
+          <Button variant="outline" onClick={() => navigate('/dashboard/pilots')} className="mt-4 cursor-pointer border-red-200 text-red-700 bg-red-50 hover:bg-red-100 rounded-xl font-bold">
             Voltar para listagem
           </Button>
         </Alert>
@@ -95,11 +95,11 @@ export const PaymentDetails = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex flex-col gap-2">
           <nav className="flex items-center gap-2 text-sm font-medium text-muted-foreground/60">
-            <button onClick={() => navigate('/dashboard')} className="hover:text-primary transition-colors">Dashboard</button>
+            <button onClick={() => navigate('/dashboard')} className="hover:text-primary transition-colors cursor-pointer">Dashboard</button>
             <ChevronRight className="w-3 h-3" />
             {isAdmin && (
               <>
-                <button onClick={() => navigate('/dashboard/pilots')} className="hover:text-primary transition-colors">Pilotos</button>
+                <button onClick={() => navigate('/dashboard/pilots')} className="hover:text-primary transition-colors cursor-pointer">Pilotos</button>
                 <ChevronRight className="w-3 h-3" />
               </>
             )}
@@ -107,7 +107,7 @@ export const PaymentDetails = () => {
           </nav>
           <h1 className="text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3">
             {isAdmin && (
-              <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard/pilots')} className="bg-white/50 border border-slate-100 rounded-xl hover:bg-white shadow-sm">
+              <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard/pilots')} className="bg-white/50 border border-slate-100 rounded-xl hover:bg-white shadow-sm cursor-pointer">
                 <ArrowLeft className="w-5 h-5 text-slate-600" />
               </Button>
             )}

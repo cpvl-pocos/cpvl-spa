@@ -27,6 +27,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { EditProfile } from '@/components/EditProfile';
 import { EmergencyContact } from '@/components/EmergencyContact';
 import { LicenseData } from '@/components/LicenseData';
+import { Enrollment } from '@/components/Enrollment';
 import { formatPhone } from '@/util/format';
 import type { IPilot } from '@/types';
 
@@ -37,6 +38,7 @@ export const PilotDetails = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isEmergencyContactOpen, setIsEmergencyContactOpen] = useState(false);
   const [isLicenseDataOpen, setIsLicenseDataOpen] = useState(false);
+  const [isEnrollmentOpen, setIsEnrollmentOpen] = useState(false);
 
   const {
     data: pilotData,
@@ -74,7 +76,7 @@ export const PilotDetails = () => {
           <AlertDescription className="font-medium">
             Ocorreu um erro ao carregar os detalhes do piloto. Verifique se o ID está correto.
           </AlertDescription>
-          <Button variant="outline" onClick={() => navigate('/dashboard/pilots')} className="mt-4 border-red-200 text-red-700 bg-red-50 hover:bg-red-100 rounded-xl font-bold">
+          <Button variant="outline" onClick={() => navigate('/dashboard/pilots')} className="mt-4 cursor-pointer border-red-200 text-red-700 bg-red-50 hover:bg-red-100 rounded-xl font-bold">
             Voltar para listagem
           </Button>
         </Alert>
@@ -88,11 +90,11 @@ export const PilotDetails = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex flex-col gap-2">
           <nav className="flex items-center gap-2 text-sm font-medium text-muted-foreground/60">
-            <button onClick={() => navigate('/dashboard')} className="hover:text-primary transition-colors">Dashboard</button>
+            <button onClick={() => navigate('/dashboard')} className="hover:text-primary transition-colors cursor-pointer">Dashboard</button>
             <ChevronRight className="w-3 h-3" />
             {isAdmin && (
               <>
-                <button onClick={() => navigate('/dashboard/pilots')} className="hover:text-primary transition-colors">Pilotos</button>
+                <button onClick={() => navigate('/dashboard/pilots')} className="hover:text-primary transition-colors cursor-pointer">Pilotos</button>
                 <ChevronRight className="w-3 h-3" />
               </>
             )}
@@ -100,7 +102,7 @@ export const PilotDetails = () => {
           </nav>
           <h1 className="text-3xl font-black tracking-tight text-slate-900 flex items-center gap-3">
             {isAdmin && (
-              <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard/pilots')} className="bg-white/50 border border-slate-100 rounded-xl hover:bg-white shadow-sm">
+              <Button variant="ghost" size="icon" onClick={() => navigate('/dashboard/pilots')} className="bg-white/50 border border-slate-100 rounded-xl hover:bg-white shadow-sm cursor-pointer">
                 <ArrowLeft className="w-5 h-5 text-slate-600" />
               </Button>
             )}
@@ -128,7 +130,7 @@ export const PilotDetails = () => {
         )}
       </div>
 
-      <div className="grid grid-cols-1 xxl:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 xxl:grid-cols-3 gap-6">
         {/* Profile Info Side */}
         <div className="xl:col-span-1 space-y-6">
           <Card className="rounded-[40px] border-none shadow-[0_20px_60px_rgba(0,0,0,0.05)] bg-white/70 backdrop-blur-xl overflow-hidden relative group">
@@ -180,14 +182,14 @@ export const PilotDetails = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 mt-3 w-full text-center">
                 <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-colors group/item">
-                  <div className="w-10 h-10 rounded-xl bg-blue shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
+                  <div className="w-10 h-10 rounded-full bg-blue shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
                     <Settings className="w-5 h-5" />
                   </div>
                   <div className="w-full">
                     <Button
                       variant="outline"
                       onClick={() => setIsLicenseDataOpen(true)}
-                      className="items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-500 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
+                      className="items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-500 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full cursor-pointer"
                     >
                       Documentação
                     </Button>
@@ -195,14 +197,14 @@ export const PilotDetails = () => {
                 </div>
 
                 <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-colors group/item">
-                  <div className="w-10 h-10 rounded-xl bg-blue shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
+                  <div className="w-10 h-10 rounded-full bg-blue shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
                     <Settings className="w-5 h-5" />
                   </div>
                   <div className="w-full">
                     <Button
                       variant="outline"
                       onClick={() => setIsEmergencyContactOpen(true)}
-                      className="items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-500 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
+                      className="items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-500 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full cursor-pointer"
                     >
                       Emergência
                     </Button>
@@ -210,19 +212,38 @@ export const PilotDetails = () => {
                 </div>
 
                 <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-colors group/item">
-                  <div className="w-10 h-10 rounded-xl bg-blue shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
+                  <div className="w-10 h-10 rounded-full bg-blue shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
                     <Settings className="w-5 h-5" />
                   </div>
                   <div className="w-full">
                     <Button
                       variant="outline"
                       onClick={() => setIsEditModalOpen(true)}
-                      className="items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-500 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full"
+                      className="items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-500 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full cursor-pointer"
                     >
                       Perfil
                     </Button>
                   </div>
                 </div>
+
+
+                <div className="grid grid-cols-1 sm:grid-cols-1 gap-1 mt-3 w-full text-center">
+                  <div className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-colors group/item">
+                    <div className="w-10 h-10 rounded-full bg-blue shadow-sm flex items-center justify-center text-primary border border-slate-100 group-hover/item:scale-110 transition-all">
+                      <Settings className="w-5 h-5" />
+                    </div>
+                    <div className="w-full">
+                      <Button
+                        variant="outline"
+                        onClick={() => setIsEnrollmentOpen(true)}
+                        className="items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-500 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full cursor-pointer"
+                      >
+                        Trancar Matrícula
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
 
               </div>
             </CardContent>
@@ -232,9 +253,9 @@ export const PilotDetails = () => {
         {/* Payments Section */}
         <div className="xl:col-span-2">
           <Card className="rounded-[40px] border-none shadow-[0_20px_60px_rgba(0,0,0,0.05)] bg-white/70 backdrop-blur-xl overflow-hidden min-h-[600px]">
-            <CardHeader className="p-8 border-b border-white/50 bg-white/30">
+            <CardHeader className="px-8 border-b border-white/50 bg-white/30">
               <div className="flex items-center gap-4 text-primary">
-                <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-black shadow-lg shadow-primary/20">
+                <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white font-black shadow-lg shadow-primary/20">
                   $
                 </div>
                 <CardTitle className="text-2xl font-black tracking-tight">Histórico de Mensalidades</CardTitle>
@@ -281,6 +302,16 @@ export const PilotDetails = () => {
             <LicenseData
               userId={pilot.userId}
               onClose={() => setIsLicenseDataOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isEnrollmentOpen} onOpenChange={setIsEnrollmentOpen}>
+        <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
+          {pilot && (
+            <Enrollment
+            // onClose={() => setIsEnrollmentOpen(false)}
             />
           )}
         </DialogContent>

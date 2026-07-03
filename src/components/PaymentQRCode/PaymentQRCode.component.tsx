@@ -137,7 +137,7 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
             <div className="bg-green-100 p-4 rounded-full mb-4"><CheckCircle2 className="h-10 w-10 text-green-600" /></div>
             <DialogTitle className="text-2xl font-black text-slate-900">Aviso Enviado!</DialogTitle>
             <DialogDescription className="text-center text-slate-600 pt-2 pb-4">A tesouraria foi notificada. O status será atualizado em breve.</DialogDescription>
-            <Button onClick={() => setIsModalOpen(false)} className="w-full rounded-2xl h-12 font-bold">Entendido</Button>
+            <Button onClick={() => setIsModalOpen(false)} className="w-full rounded-2xl h-12 font-bold cursor-pointer">Entendido</Button>
           </DialogHeader>
         </DialogContent>
       </Dialog>
@@ -248,7 +248,7 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
                       </div>
                       <Button
                         variant="outline"
-                        className={cn("w-full h-14 rounded-2xl border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold transition-all px-5 justify-between", copied && "border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400")}
+                        className={cn("w-full h-14 rounded-2xl border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold transition-all px-5 justify-between cursor-pointer", copied && "border-green-500 dark:border-green-600 bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400")}
                         onClick={copyToClipboard}
                         disabled={!pixCode}
                       >
@@ -262,7 +262,7 @@ export const PaymentQRCode: React.FC<PaymentProps> = ({
                       <Button
                         variant="warning"
                         disabled={isSubmitting || !pixCode}
-                        className="w-full h-20 rounded-[2rem] shadow-xl shadow-amber-500/10 flex flex-col items-center justify-center gap-1 transition-all hover:scale-[1.02] group overflow-hidden"
+                        className="w-full h-20 rounded-[2rem] shadow-xl shadow-amber-500/10 flex flex-col items-center justify-center gap-1 transition-all hover:scale-[1.02] group overflow-hidden cursor-pointer"
                         onClick={handlePaymentNotice}
                       >
                         <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform" />
