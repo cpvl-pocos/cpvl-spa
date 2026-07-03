@@ -131,7 +131,7 @@ export const Newpassword = () => {
               <Button
                 onClick={handleConfirm}
                 disabled={isLoading}
-                className="w-full h-14 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all group overflow-hidden"
+                className="w-full h-14 rounded-2xl bg-primary text-white font-black text-lg shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all group overflow-hidden cursor-pointer"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   {isLoading ? (

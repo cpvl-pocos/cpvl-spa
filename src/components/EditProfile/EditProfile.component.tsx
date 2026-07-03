@@ -223,9 +223,9 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                   <label htmlFor="photo-upload" className="absolute inset-0 flex items-center justify-center bg-slate-900/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"><Camera className="text-white" size={28} /></label>
                 </div>
                 <div className="flex flex-col gap-2 w-full">
-                  <Button type="button" variant="outline" className="rounded-xl font-bold text-xs" asChild><label htmlFor="photo-upload" className="cursor-pointer"><Camera className="mr-2 h-4 w-4" />Alterar Foto</label></Button>
+                  <Button type="button" variant="outline" className="rounded-xl font-bold text-xs cursor-pointer" asChild><label htmlFor="photo-upload" className="cursor-pointer"><Camera className="mr-2 h-4 w-4" />Alterar Foto</label></Button>
                   <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" id="photo-upload" />
-                  {formState.photoUrl && <Button type="button" variant="ghost" className="rounded-xl font-bold text-destructive text-xs" onClick={handleRemovePhoto}><Trash2 className="mr-2 h-4 w-4" />Remover</Button>}
+                  {formState.photoUrl && <Button type="button" variant="ghost" className="rounded-xl font-bold text-destructive text-xs cursor-pointer" onClick={handleRemovePhoto}><Trash2 className="mr-2 h-4 w-4" />Remover</Button>}
                 </div>
               </div>
 
@@ -250,8 +250,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           </Card>
 
           <div className="flex gap-4 pt-6">
-            {onClose && <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black text-slate-400">VOLTAR</Button>}
-            <Button type="submit" disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black shadow-xl bg-primary hover:bg-primary/90">{isSubmitting ? <Spinner className="mr-2 h-4 w-4" /> : <Save className="mr-2 h-5 w-5" />}SALVAR ALTERAÇÕES</Button>
+            {onClose && <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black text-slate-400 cursor-pointer">VOLTAR</Button>}
+            <Button type="submit" disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black shadow-xl bg-primary hover:bg-primary/90 cursor-pointer">{isSubmitting ? <Spinner className="mr-2 h-4 w-4" /> : <Save className="mr-2 h-5 w-5" />}SALVAR ALTERAÇÕES</Button>
           </div>
         </form>
       </div>

@@ -30,7 +30,7 @@ interface IProps {
 const MainNav = ({ onLogout, onNav, allowedRoutes, userData }: IProps) => {
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
-    
+
     // Type-safe name extraction
     const pilot = (userData as any)?.pilot || userData;
     const firstName = pilot?.firstName || '';
@@ -68,20 +68,20 @@ const MainNav = ({ onLogout, onNav, allowedRoutes, userData }: IProps) => {
             <div className="hidden md:flex items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-foreground/80 hover:text-primary hover:bg-primary/10 gap-2 rounded-xl h-10 font-bold transition-all">
+                  <Button variant="ghost" className="text-foreground/80 hover:text-primary hover:bg-primary/10 gap-2 rounded-xl h-10 font-bold transition-all cursor-pointer">
                     <LayoutDashboard className="w-4 h-4" />
                     Menu do Piloto
                     <ChevronDown className="w-3 h-3 opacity-50" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 rounded-2xl border-border bg-card text-card-foreground shadow-2xl animate-in zoom-in-95">
-                  <DropdownMenuLabel className="text-xs uppercase font-black text-muted-foreground tracking-widest px-4 py-3">Navegação</DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-border" />
+                <DropdownMenuContent className="w-56 rounded-md border-border bg-card text-card-foreground shadow-2xl animate-in zoom-in-95 mt-2">
+                  {/* <DropdownMenuLabel className="text-xs uppercase font-black text-muted-foreground tracking-widest px-4 py-3">Navegação</DropdownMenuLabel> */}
+                  {/* <DropdownMenuSeparator className="bg-border" /> */}
                   {allowedRoutes.map((route, idx) => (
                     <DropdownMenuItem
                       key={idx}
                       onClick={() => onNav(route)}
-                      className="px-4 py-3 cursor-pointer hover:bg-primary/20 hover:text-primary focus:bg-primary/20 focus:text-primary rounded-xl transition-colors mx-1 font-bold"
+                      className="px-4 py-3 cursor-pointer hover:bg-primary/20 hover:text-primary focus:bg-primary/20 focus:text-primary rounded-lg transition-colors mx-1 font-bold"
                     >
                       {route.label}
                     </DropdownMenuItem>
@@ -105,15 +105,15 @@ const MainNav = ({ onLogout, onNav, allowedRoutes, userData }: IProps) => {
 
           {/* User, Theme & Logout */}
           <div className="flex items-center gap-4">
-            <ThemeToggle 
-              className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft" 
+            <ThemeToggle
+              className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-soft"
             />
 
             {/* Mobile Menu Trigger */}
             <div className="md:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/10 rounded-xl">
+                  <Button variant="ghost" size="icon" className="text-foreground hover:bg-primary/10 rounded-xl cursor-pointer">
                     <MenuIcon className="w-6 h-6" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -138,7 +138,7 @@ const MainNav = ({ onLogout, onNav, allowedRoutes, userData }: IProps) => {
             <Button
               variant="outline"
               onClick={onLogout}
-              className="hidden md:flex bg-transparent border-border text-foreground/80 hover:bg-destructive/10 hover:border-destructive/50 hover:text-destructive rounded-xl h-10 px-6 font-black transition-all group"
+              className="hidden md:flex bg-transparent border-border text-foreground/80 hover:bg-destructive/10 hover:border-destructive/50 hover:text-destructive rounded-xl h-10 px-6 font-black transition-all group cursor-pointer"
             >
               <LogOut className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
               Sair

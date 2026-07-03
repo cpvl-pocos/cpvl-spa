@@ -16,7 +16,7 @@ export const EditProfilePage = () => {
     return (
       <div className="p-8 text-center">
         <p className="text-destructive font-bold">Usuário não identificado.</p>
-        <Button onClick={() => navigate('/dashboard')} className="mt-4">
+        <Button onClick={() => navigate('/dashboard')} className="mt-4 cursor-pointer">
           Voltar ao Dashboard
         </Button>
       </div>
@@ -31,7 +31,7 @@ export const EditProfilePage = () => {
           variant="ghost"
           size="icon"
           onClick={handleClose}
-          className="bg-white/80 border border-slate-100 rounded-xl hover:bg-white shadow-sm h-10 w-10 sm:h-12 sm:w-12 shrink-0"
+          className="bg-white/80 border border-slate-100 rounded-xl hover:bg-white shadow-sm h-10 w-10 sm:h-12 sm:w-12 shrink-0 cursor-pointer"
         >
           <ArrowLeft className="w-5 h-5 text-slate-600" />
         </Button>

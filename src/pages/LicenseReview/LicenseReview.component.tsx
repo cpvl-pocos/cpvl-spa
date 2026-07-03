@@ -123,7 +123,7 @@ export const LicenseReview = () => {
               <CheckCircle2 className="h-4 w-4" />
               <AlertTitle className="font-bold">Sucesso</AlertTitle>
               <AlertDescription className="font-medium text-xs sm:text-sm">{successMsg}</AlertDescription>
-              <Button variant="ghost" size="sm" onClick={() => setSuccessMsg('')} className="absolute right-2 top-2 text-green-700 hover:bg-green-100">×</Button>
+              <Button variant="ghost" size="sm" onClick={() => setSuccessMsg('')} className="absolute right-2 top-2 text-green-700 hover:bg-green-100 cursor-pointer">×</Button>
             </Alert>
           )}
 
@@ -132,7 +132,7 @@ export const LicenseReview = () => {
               <AlertCircle className="h-4 w-4" />
               <AlertTitle className="font-bold">Erro</AlertTitle>
               <AlertDescription className="font-medium text-xs sm:text-sm">{errorMsg}</AlertDescription>
-              <Button variant="ghost" size="sm" onClick={() => setErrorMsg('')} className="absolute right-2 top-2 text-red-700 hover:bg-red-50">×</Button>
+              <Button variant="ghost" size="sm" onClick={() => setErrorMsg('')} className="absolute right-2 top-2 text-red-700 hover:bg-red-50 cursor-pointer">×</Button>
             </Alert>
           )}
         </div>
@@ -185,7 +185,7 @@ export const LicenseReview = () => {
                         variant="ghost"
                         size="icon"
                         onClick={() => handleOpenReview(item)}
-                        className="rounded-xl h-10 w-10 hover:bg-primary/10 hover:text-primary transition-all group-hover:scale-110"
+                        className="rounded-xl h-10 w-10 hover:bg-primary/10 hover:text-primary transition-all group-hover:scale-110 cursor-pointer"
                       >
                         <Eye className="w-5 h-5" />
                       </Button>
@@ -286,10 +286,10 @@ export const LicenseReview = () => {
           </ScrollArea>
 
           <DialogFooter className="p-5 sm:p-8 pt-4 bg-slate-50/50 border-t border-slate-100 flex flex-col sm:flex-row gap-4 items-center sm:justify-between">
-            <Button variant="ghost" onClick={() => setOpenReview(false)} className="w-full sm:w-auto rounded-xl sm:rounded-2xl font-bold text-slate-400 hover:text-slate-600 order-2 sm:order-1 h-12">
+            <Button variant="ghost" onClick={() => setOpenReview(false)} className="w-full sm:w-auto rounded-xl sm:rounded-2xl font-bold text-slate-400 hover:text-slate-600 order-2 sm:order-1 h-12 cursor-pointer">
               Fechar
             </Button>
-            <Button onClick={() => selectedData && handleConfirm(selectedData.userId)} className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-black px-6 sm:px-10 rounded-xl sm:rounded-2xl h-12 sm:h-14 shadow-lg shadow-green-100 flex items-center justify-center gap-2 order-1 sm:order-2">
+            <Button onClick={() => selectedData && handleConfirm(selectedData.userId)} className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-black px-6 sm:px-10 rounded-xl sm:rounded-2xl h-12 sm:h-14 shadow-lg shadow-green-100 flex items-center justify-center gap-2 order-1 sm:order-2 cursor-pointer">
               <CheckCircle2 className="w-5 h-5" /> Confirmar
             </Button>
           </DialogFooter>

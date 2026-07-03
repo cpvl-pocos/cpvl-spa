@@ -196,10 +196,10 @@ export const EmergencyContact: React.FC<EmergencyContactProps> = ({
 
           <div className="flex gap-4 pt-6">
             <div className="flex gap-3 flex-1">
-              {onClose && <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black text-slate-400">VOLTAR</Button>}
-              <Button type="button" variant="outline" onClick={handleClear} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black border-slate-200 text-slate-500"><Eraser className="mr-2 h-4 w-4" />LIMPAR</Button>
+              {onClose && <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-white text-slate-400 cursor-pointer">VOLTAR</Button>}
+              <Button type="button" variant="outline" onClick={handleClear} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black border-slate-200 text-slate-500 cursor-pointer"><Eraser className="mr-2 h-4 w-4" />LIMPAR</Button>
             </div>
-            <Button type="submit" disabled={isSubmitting} className="flex-1 max-w-[240px] rounded-2xl h-12 font-black shadow-xl">{isSubmitting ? <Spinner className="mr-2 h-4 w-4" /> : <Save className="mr-2 h-5 w-5" />}SALVAR DADOS</Button>
+            <Button type="submit" disabled={isSubmitting} className="flex-1 max-w-[240px] rounded-2xl h-12 font-black shadow-xl cursor-pointer">{isSubmitting ? <Spinner className="mr-2 h-4 w-4" /> : <Save className="mr-2 h-5 w-5" />}SALVAR DADOS</Button>
           </div>
         </form>
       </div>
