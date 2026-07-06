@@ -211,7 +211,23 @@ export const PaymentMonthly: React.FC<PaymentMonthlyProps> = ({
   if (!isUserIdValid) return <Alert variant="destructive"><AlertTitle>Erro</AlertTitle><AlertDescription>ID Inválido</AlertDescription></Alert>;
   if (pilotLoading || paymentsLoading) return <div className="flex justify-center p-20"><Spinner className="h-12 w-12" /></div>;
 
+  const isPilotTrancado = pilot?.status?.toLowerCase() === 'trancado';
   const isPilotFiliado = pilot?.status?.toLowerCase() === 'filiado';
+
+  if (isPilotTrancado) {
+    return (
+      <div className="mt-6 p-4">
+        <Alert className="bg-amber-50 border-amber-200">
+          <AlertCircle className="h-4 w-4 text-amber-600" />
+          <AlertTitle>Matrícula Trancada</AlertTitle>
+          <AlertDescription>
+            Este piloto está com a matrícula <strong>trancada</strong> (Artigo 18, item IX do Estatuto do Clube). As mensalidades estão suspensas até o destrancamento.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
   if (!isPilotFiliado) {
     return (
       <div className="mt-6 p-4">
@@ -268,7 +284,7 @@ export const PaymentMonthly: React.FC<PaymentMonthlyProps> = ({
 
       {/* Main Table */}
       <Card className="overflow-hidden border-none shadow-md">
-        <Accordion type="single" collapsible defaultValue="panel1">
+        <Accordion type="single" collapsible>
           <AccordionItem value="panel1" className="border-none">
             <AccordionTrigger className="px-6 py-4 bg-muted/10">
               <div className="flex items-center gap-4 text-left">

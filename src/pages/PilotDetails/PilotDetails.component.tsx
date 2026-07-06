@@ -238,7 +238,7 @@ export const PilotDetails = () => {
                         onClick={() => setIsEnrollmentOpen(true)}
                         className="items-center justify-start gap-2 rounded-2xl font-black border-slate-100 text-slate-500 hover:text-primary hover:border-primary/20 hover:bg-primary/5 h-12 w-full cursor-pointer"
                       >
-                        Trancar Matrícula
+                        {pilot.status?.toLowerCase() === 'trancado' ? 'Destrancar Matrícula' : 'Trancar Matrícula'}
                       </Button>
                     </div>
                   </div>
@@ -307,15 +307,19 @@ export const PilotDetails = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isEnrollmentOpen} onOpenChange={setIsEnrollmentOpen}>
-        <DialogContent className="sm:max-w-4xl rounded-3xl border-none shadow-2xl bg-white/95 backdrop-blur-xl p-0 overflow-hidden">
-          {pilot && (
-            <Enrollment
-            // onClose={() => setIsEnrollmentOpen(false)}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
+      {isEnrollmentOpen && pilot && (
+        <Enrollment
+          userId={pilot.userId}
+          currentStatus={pilot.status}
+          paymentMonthlies={pilot.paymentMonthlies}
+          onStatusChange={(newStatus) =>
+            setPilot((prev) =>
+              prev ? { ...prev, status: newStatus } : null
+            )
+          }
+          onClose={() => setIsEnrollmentOpen(false)}
+        />
+      )}
     </div>
   );
 };
