@@ -1,12 +1,15 @@
 // src/pages/LicenseReview/LicenseReview.component.tsx
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
   Eye,
   CheckCircle2,
   XCircle,
   FileText,
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw
 } from 'lucide-react';
 import { useFetch } from '@/hooks';
 import { API, getURI } from '@/services';
@@ -45,6 +48,7 @@ interface ILicensePending {
   status: string;
   user: {
     username: string;
+    email?: string;
   };
   pilot: {
     firstName: string;
@@ -54,9 +58,15 @@ interface ILicensePending {
 
 export const LicenseReview = () => {
   const [selectedData, setSelectedData] = useState<ILicensePending | null>(null);
+  const [selectedDocType, setSelectedDocType] = useState<'CBVL' | 'ANAC' | null>(null);
   const [openReview, setOpenReview] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [zoom, setZoom] = useState(1);
+
+  const handleZoomIn = useCallback(() => setZoom(prev => Math.min(prev + 0.25, 3)), []);
+  const handleZoomOut = useCallback(() => setZoom(prev => Math.max(prev - 0.25, 0.5)), []);
+  const handleZoomReset = useCallback(() => setZoom(1), []);
 
   const {
     data: pending,
@@ -71,8 +81,13 @@ export const LicenseReview = () => {
     method: 'PATCH'
   });
 
-  const handleOpenReview = (item: ILicensePending) => {
+  const { doFetch: doReject } = useFetch<any>({
+    method: 'PATCH'
+  });
+
+  const handleOpenReview = (item: ILicensePending, docType: 'CBVL' | 'ANAC') => {
     setSelectedData(item);
+    setSelectedDocType(docType);
     setOpenReview(true);
   };
 
@@ -90,6 +105,25 @@ export const LicenseReview = () => {
       });
     } catch (err: any) {
       setErrorMsg(err.message || 'Erro ao confirmar documentação.');
+    }
+  };
+
+  const handleReject = async (userId: number, docType: 'CBVL' | 'ANAC') => {
+    try {
+      await doReject({
+        url: getURI(`${API.licenseData}/${userId}/reject`),
+        method: 'PATCH',
+        body: { docType }
+      });
+
+      setSuccessMsg('Documentação rejeitada e email enviado ao piloto!');
+      setOpenReview(false);
+      refreshPending({
+        url: getURI(`${API.licenseData}/pending`),
+        method: 'GET'
+      });
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Erro ao rejeitar documentação.');
     }
   };
 
@@ -138,7 +172,7 @@ export const LicenseReview = () => {
         </div>
       )}
 
-      <Card className="border-none shadow-[0_10px_40px_rgba(0,0,0,0.03)] bg-white/70 backdrop-blur-xl overflow-hidden rounded-[2rem] sm:rounded-[32px]">
+      <Card className="border-none shadow-[0_10px_40px_rgba(0,0,0,0.03)] bg-white/70 backdrop-blur-xl overflow-hidden rounded-4xl sm:rounded-4xl">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader className="bg-slate-50/50">
@@ -146,19 +180,22 @@ export const LicenseReview = () => {
                 <TableHead className="font-black text-slate-700 h-14 text-[10px] uppercase tracking-widest pl-6">Piloto</TableHead>
                 <TableHead className="font-black text-slate-700 h-14 text-[10px] uppercase tracking-widest hidden sm:table-cell">Nível</TableHead>
                 <TableHead className="font-black text-slate-700 h-14 text-[10px] uppercase tracking-widest text-center">CIVL</TableHead>
-                <TableHead className="font-black text-slate-700 h-14 text-[10px] uppercase tracking-widest text-right pr-6">Ações</TableHead>
+                <TableHead className="font-black text-slate-700 h-14 text-[10px] uppercase tracking-widest text-center">Documento</TableHead>
+                <TableHead className="font-black text-slate-700 h-14 text-[10px] uppercase tracking-widest text-center hidden sm:table-cell">Expiração</TableHead>
+                <TableHead className="font-black text-slate-700 h-14 text-[10px] uppercase tracking-widest text-center">Status</TableHead>
+                <TableHead className="font-black text-slate-700 h-14 text-[10px] uppercase tracking-widest text-right pr-6">Verificar</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {(!pending || pending.length === 0) ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-32 text-center text-slate-400 font-medium italic">
+                  <TableCell colSpan={7} className="h-32 text-center text-slate-400 font-medium italic">
                     Nenhum documento pendente no momento.
                   </TableCell>
                 </TableRow>
               ) : (
-                pending.map((item) => (
-                  <TableRow key={item.userId} className="group hover:bg-primary/[0.01] border-slate-50 transition-colors">
+                pending.map((item) => [
+                  <TableRow key={`${item.userId}-cbvl`} className="group hover:bg-primary/1 border-slate-50 transition-colors">
                     <TableCell className="py-4 pl-6">
                       <div className="flex flex-col">
                         <span className="font-black text-slate-900 leading-tight text-sm sm:text-base">
@@ -180,18 +217,77 @@ export const LicenseReview = () => {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-center font-mono font-bold text-primary text-sm">{item.civl}</TableCell>
+                    <TableCell className="text-center">
+                      <Badge className="bg-primary/10 text-primary hover:bg-primary/10 rounded-md px-1.5 h-6 font-black">CBVL</Badge>
+                    </TableCell>
+                    <TableCell className="text-center text-xs text-slate-500 font-medium hidden sm:table-cell">
+                      {item.cbvlExpiration ? new Date(item.cbvlExpiration).toLocaleDateString('pt-BR') : '—'}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.imgCbvl ? (
+                        <Badge className="bg-green-50 text-green-600 hover:bg-green-50 rounded-md px-1.5 h-6 font-bold border-none">Enviado</Badge>
+                      ) : (
+                        <Badge className="bg-amber-50 text-amber-600 hover:bg-amber-50 rounded-md px-1.5 h-6 font-bold border-none">Pendente</Badge>
+                      )}
+                    </TableCell>
                     <TableCell className="text-right pr-6">
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleOpenReview(item)}
+                        onClick={() => handleOpenReview(item, 'CBVL')}
+                        className="rounded-xl h-10 w-10 hover:bg-primary/10 hover:text-primary transition-all group-hover:scale-110 cursor-pointer"
+                      >
+                        <Eye className="w-5 h-5" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>,
+                  <TableRow key={`${item.userId}-anac`} className="group hover:bg-primary/1 border-slate-50 transition-colors">
+                    <TableCell className="py-4 pl-6">
+                      <div className="flex flex-col">
+                        <span className="font-black text-slate-900 leading-tight text-sm sm:text-base">
+                          {item.pilot ? `${item.pilot.firstName} ${item.pilot.lastName}` : 'N/A'}
+                        </span>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-[9px] text-muted-foreground font-mono uppercase tracking-widest">
+                            @{(item.user && item.user.username) || 'N/A'}
+                          </span>
+                          <Badge variant="secondary" className="sm:hidden h-4 rounded-md font-bold bg-slate-100 text-slate-500 border-none px-1.5 text-[8px]">
+                            {item.pilotLevel}
+                          </Badge>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">
+                      <Badge variant="secondary" className="rounded-lg font-bold bg-slate-100 text-slate-600 border-none px-3">
+                        {item.pilotLevel}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-center font-mono font-bold text-primary text-sm">{item.civl}</TableCell>
+                    <TableCell className="text-center">
+                      <Badge className="bg-slate-100 text-slate-600 hover:bg-slate-100 rounded-md px-1.5 h-6 font-black">ANAC</Badge>
+                    </TableCell>
+                    <TableCell className="text-center text-xs text-slate-500 font-medium hidden sm:table-cell">
+                      {item.anacExpiration ? new Date(item.anacExpiration).toLocaleDateString('pt-BR') : '—'}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {item.imgAnac ? (
+                        <Badge className="bg-green-50 text-green-600 hover:bg-green-50 rounded-md px-1.5 h-6 font-bold border-none">Enviado</Badge>
+                      ) : (
+                        <Badge className="bg-amber-50 text-amber-600 hover:bg-amber-50 rounded-md px-1.5 h-6 font-bold border-none">Pendente</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right pr-6">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleOpenReview(item, 'ANAC')}
                         className="rounded-xl h-10 w-10 hover:bg-primary/10 hover:text-primary transition-all group-hover:scale-110 cursor-pointer"
                       >
                         <Eye className="w-5 h-5" />
                       </Button>
                     </TableCell>
                   </TableRow>
-                ))
+                ])
               )}
             </TableBody>
           </Table>
@@ -200,77 +296,82 @@ export const LicenseReview = () => {
 
       {/* Review Dialog */}
       <Dialog open={openReview} onOpenChange={setOpenReview}>
-        <DialogContent className="sm:max-w-4xl max-h-[95vh] p-0 flex flex-col border-none shadow-2xl rounded-2xl sm:rounded-[40px] bg-white overflow-hidden">
-          <DialogHeader className="p-5 sm:p-8 pb-4 bg-gradient-to-r from-slate-50 to-white">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                <ShieldCheck className="w-6 h-6 sm:w-7 sm:h-7" />
-              </div>
-              <div className="text-left min-w-0">
-                <DialogTitle className="text-lg sm:text-2xl font-black tracking-tight truncate">Revisar Documentação</DialogTitle>
-                <DialogDescription className="font-bold text-slate-400 text-[10px] sm:text-sm truncate">
-                  {selectedData?.pilot?.firstName} {selectedData?.pilot?.lastName} • CIVL: {selectedData?.civl}
-                </DialogDescription>
-              </div>
-            </div>
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] p-0 flex flex-col border-none shadow-2xl rounded-2xl sm:rounded-[40px] bg-white overflow-hidden">
+          <DialogHeader className="p-6 pb-2 shrink-0">
+            <DialogTitle className="text-xl font-black tracking-tight flex items-center gap-2">
+              <ShieldCheck size={20} className="text-primary" />
+              Revisar Documentação
+            </DialogTitle>
+            <DialogDescription className="text-slate-500 font-bold text-sm truncate">
+              {selectedData?.pilot?.firstName} {selectedData?.pilot?.lastName} • CIVL: {selectedData?.civl} • {selectedDocType}
+            </DialogDescription>
           </DialogHeader>
 
-          <ScrollArea className="flex-1 px-5 sm:px-8 py-4">
-            {selectedData && (
+          <ScrollArea className="flex-1 overflow-y-auto px-6 py-4">
+            {selectedData && selectedDocType && (
               <div className="space-y-8 sm:space-y-10 pb-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-                  {/* CBVL Section */}
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                      <h3 className="font-black text-slate-900 flex items-center gap-2 text-sm sm:text-base">
-                        <Badge className="bg-primary hover:bg-primary rounded-md px-1.5 h-6">CBVL</Badge>
-                        Carteirinha CBVL
-                      </h3>
-                      <span className="text-[10px] font-bold text-slate-400">
-                        Exp: {new Date(selectedData.cbvlExpiration).toLocaleDateString()}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <h3 className="font-black text-slate-900 flex items-center gap-2 text-sm sm:text-base">
+                      <Badge className="bg-primary hover:bg-primary rounded-md px-1.5 h-6">{selectedDocType}</Badge>
+                      Carteirinha {selectedDocType}
+                    </h3>
+                    <div className="flex items-center gap-1">
+                      <span className="text-[10px] font-bold text-slate-400 mr-2">
+                        Exp: {new Date(selectedDocType === 'CBVL' ? selectedData.cbvlExpiration : selectedData.anacExpiration).toLocaleDateString()}
                       </span>
-                    </div>
-                    <div className="rounded-2xl sm:rounded-3xl border-2 border-slate-50 bg-slate-50/50 overflow-hidden min-h-[300px] sm:min-h-[400px] flex items-center justify-center relative group">
-                      {selectedData.imgCbvl ? (
-                        selectedData.imgCbvl.startsWith('data:application/pdf') ? (
-                          <iframe src={selectedData.imgCbvl} className="w-full h-[300px] sm:h-[400px] rounded-xl" title="PDF CBVL" />
-                        ) : (
-                          <img src={selectedData.imgCbvl} alt="CBVL" className="max-w-full h-auto object-contain rounded-xl" />
-                        )
-                      ) : (
-                        <div className="flex flex-col items-center gap-2 text-slate-300">
-                          <XCircle className="w-10 h-10" />
-                          <p className="font-bold text-xs">Sem imagem</p>
-                        </div>
-                      )}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleZoomOut}
+                        disabled={zoom <= 0.5}
+                        className="h-7 w-7 rounded-lg text-slate-500 hover:text-slate-700 cursor-pointer"
+                      >
+                        <ZoomOut className="h-3.5 w-3.5" />
+                      </Button>
+                      <span className="text-[10px] font-bold text-slate-500 min-w-9 text-center">
+                        {Math.round(zoom * 100)}%
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleZoomIn}
+                        disabled={zoom >= 3}
+                        className="h-7 w-7 rounded-lg text-slate-500 hover:text-slate-700 cursor-pointer"
+                      >
+                        <ZoomIn className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={handleZoomReset}
+                        disabled={zoom === 1}
+                        className="h-7 w-7 rounded-lg text-slate-500 hover:text-slate-700 cursor-pointer"
+                      >
+                        <RotateCcw className="h-3.5 w-3.5" />
+                      </Button>
                     </div>
                   </div>
-
-                  {/* ANAC Section */}
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                      <h3 className="font-black text-slate-900 flex items-center gap-2 text-sm sm:text-base">
-                        <Badge className="bg-primary hover:bg-primary rounded-md px-1.5 h-6">ANAC</Badge>
-                        Carteirinha ANAC
-                      </h3>
-                      <span className="text-[10px] font-bold text-slate-400">
-                        Exp: {new Date(selectedData.anacExpiration).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="rounded-2xl sm:rounded-3xl border-2 border-slate-50 bg-slate-50/50 overflow-hidden min-h-[300px] sm:min-h-[400px] flex items-center justify-center relative group">
-                      {selectedData.imgAnac ? (
-                        selectedData.imgAnac.startsWith('data:application/pdf') ? (
-                          <iframe src={selectedData.imgAnac} className="w-full h-[300px] sm:h-[400px] rounded-xl" title="PDF ANAC" />
-                        ) : (
-                          <img src={selectedData.imgAnac} alt="ANAC" className="max-w-full h-auto object-contain rounded-xl" />
-                        )
+                  <div className="rounded-2xl sm:rounded-3xl border-2 border-slate-50 bg-slate-50/50 overflow-hidden min-h-[400px] sm:min-h-[500px] flex items-center justify-center relative group">
+                    {(selectedDocType === 'CBVL' ? selectedData.imgCbvl : selectedData.imgAnac) ? (
+                      (selectedDocType === 'CBVL' ? selectedData.imgCbvl : selectedData.imgAnac).startsWith('data:application/pdf') ? (
+                        <iframe src={selectedDocType === 'CBVL' ? selectedData.imgCbvl : selectedData.imgAnac} className="w-full h-[400px] sm:h-[500px] rounded-xl" title={`PDF ${selectedDocType}`} />
                       ) : (
-                        <div className="flex flex-col items-center gap-2 text-slate-300">
-                          <XCircle className="w-10 h-10" />
-                          <p className="font-bold text-xs">Sem imagem</p>
+                        <div className="overflow-auto max-h-[400px] sm:max-h-[500px] w-full flex items-center justify-center">
+                          <img
+                            src={selectedDocType === 'CBVL' ? selectedData.imgCbvl : selectedData.imgAnac}
+                            alt={selectedDocType}
+                            className="rounded-xl transition-transform duration-200"
+                            style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}
+                          />
                         </div>
-                      )}
-                    </div>
+                      )
+                    ) : (
+                      <div className="flex flex-col items-center gap-2 text-slate-300">
+                        <XCircle className="w-10 h-10" />
+                        <p className="font-bold text-xs">Sem documento</p>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -285,13 +386,18 @@ export const LicenseReview = () => {
             )}
           </ScrollArea>
 
-          <DialogFooter className="p-5 sm:p-8 pt-4 bg-slate-50/50 border-t border-slate-100 flex flex-col sm:flex-row gap-4 items-center sm:justify-between">
-            <Button variant="ghost" onClick={() => setOpenReview(false)} className="w-full sm:w-auto rounded-xl sm:rounded-2xl font-bold text-slate-400 hover:text-slate-600 order-2 sm:order-1 h-12 cursor-pointer">
+          <DialogFooter className="p-3 sm:p-4 pt-2 bg-slate-50/50 border-t border-slate-100 flex flex-col sm:flex-row gap-2 items-center sm:justify-between shrink-0">
+            <Button variant="ghost" onClick={() => setOpenReview(false)} className="w-full sm:w-auto rounded-xl sm:rounded-2xl font-bold text-slate-400 hover:text-slate-600 order-2 sm:order-1 h-9 cursor-pointer">
               Fechar
             </Button>
-            <Button onClick={() => selectedData && handleConfirm(selectedData.userId)} className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-black px-6 sm:px-10 rounded-xl sm:rounded-2xl h-12 sm:h-14 shadow-lg shadow-green-100 flex items-center justify-center gap-2 order-1 sm:order-2 cursor-pointer">
-              <CheckCircle2 className="w-5 h-5" /> Confirmar
-            </Button>
+            <div className="flex gap-2 order-1 sm:order-2 w-full sm:w-auto">
+              <Button onClick={() => selectedData && handleReject(selectedData.userId, selectedDocType || 'CBVL')} className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-black px-4 sm:px-6 rounded-xl sm:rounded-2xl h-9 sm:h-10 shadow-lg shadow-red-100 flex items-center justify-center gap-2 cursor-pointer">
+                <XCircle className="w-4 h-4" /> Rejeitar
+              </Button>
+              <Button onClick={() => selectedData && handleConfirm(selectedData.userId)} className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-black px-6 sm:px-8 rounded-xl sm:rounded-2xl h-9 sm:h-10 shadow-lg shadow-green-100 flex items-center justify-center gap-2 cursor-pointer">
+                <CheckCircle2 className="w-4 h-4" /> Confirmar
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>

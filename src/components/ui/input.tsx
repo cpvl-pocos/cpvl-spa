@@ -2,7 +2,25 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+function Input({ className, type, onBlur, ...props }: React.ComponentProps<"input">) {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (onBlur) {
+      onBlur(e)
+    }
+    // Auto-trim value on blur
+    const target = e.target
+    if (target.value && target.value !== target.value.trim()) {
+      const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLInputElement.prototype,
+        'value'
+      )?.set
+      if (nativeInputValueSetter) {
+        nativeInputValueSetter.call(target, target.value.trim())
+        target.dispatchEvent(new Event('input', { bubbles: true }))
+      }
+    }
+  }
+
   return (
     <input
       type={type}
@@ -13,6 +31,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
         className
       )}
+      onBlur={handleBlur}
       {...props}
     />
   )

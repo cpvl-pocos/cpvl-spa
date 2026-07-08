@@ -13,6 +13,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
+import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useFetch } from '@/hooks';
 import { API, getURI } from '@/services';
 import {
@@ -20,6 +21,7 @@ import {
   Trash2,
   CheckCircle2,
   AlertCircle,
+  XCircle,
   Save,
   Eraser,
   IdCard,
@@ -102,6 +104,13 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
       setSuccessMessage('Dados de licença salvos com sucesso!');
       setIsSubmitting(false);
       fetchExisting({ url: getURI(`${API.licenseData}/${userId}`) });
+      
+      // Close modal after successful save with slight delay to show success message
+      setTimeout(() => {
+        if (onClose) {
+          onClose();
+        }
+      }, 1500);
     } catch (err) {
       setIsSubmitting(false);
       setFormError('Falha ao salvar os dados.');
@@ -128,7 +137,7 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, field: 'imgCbvl' | 'imgAnac') => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) return setFormError('O arquivo deve ter no máximo 2MB');
+    if (file.size > 1024 * 1024) return setFormError('O arquivo deve ter no máximo 1MB');
     
     const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
     if (!allowedTypes.includes(file.type)) return setFormError('O arquivo deve ser uma imagem ou PDF');
@@ -153,26 +162,23 @@ export const LicenseData: React.FC<LicenseDataProps> = ({
 
   return (
     <div className="p-0 space-y-0 animate-in fade-in duration-500 w-full max-w-4xl mx-auto overflow-y-auto max-h-[90vh] scrollbar-thin">
-      <div className="relative overflow-hidden bg-slate-900 sm:rounded-[2rem] p-6 md:p-8 text-white shadow-2xl">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-3xl -mr-32 -mt-32" />
-        <div className="relative z-10 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="p-2.5 bg-white/10 backdrop-blur-md rounded-xl"><ShieldCheck size={24} className="text-primary-foreground" /></div>
-            {formState.status && (
-              <Badge variant={formState.status === 'Confirmado' ? 'success' : 'warning'} className="px-3 rounded-full font-black uppercase tracking-widest text-[9px] shadow-lg">
-                {formState.status === 'Confirmado' ? <CheckCircle2 size={12} className="mr-1" /> : <AlertCircle size={12} className="mr-1" />}
-                {formState.status === 'Confirmado' ? 'Validado' : 'Em Análise'}
-              </Badge>
-            )}
-          </div>
-          <div>
-            <h2 className="text-xl md:text-2xl font-black tracking-tight">Documentação</h2>
-            <p className="text-slate-400 font-bold text-[10px] tracking-wide uppercase">{displayName || 'Gerenciamento de licenças'}</p>
-          </div>
-        </div>
-      </div>
+      <DialogHeader className="p-6 pb-2">
+        <DialogTitle className="text-xl font-black tracking-tight flex items-center gap-2">
+          <ShieldCheck size={20} className="text-primary" />
+          Documentação
+          {formState.status && (
+            <Badge variant={formState.status === 'Confirmado' ? 'success' : formState.status === 'Rejeitado' ? 'destructive' : 'warning'} className="px-2 py-0.5 rounded-md font-black uppercase tracking-widest text-[10px] ml-2">
+              {formState.status === 'Confirmado' ? <CheckCircle2 size={10} className="mr-1" /> : formState.status === 'Rejeitado' ? <XCircle size={10} className="mr-1" /> : <AlertCircle size={10} className="mr-1" />}
+              {formState.status === 'Confirmado' ? 'Validado' : formState.status === 'Rejeitado' ? 'Rejeitado' : 'Em Análise'}
+            </Badge>
+          )}
+        </DialogTitle>
+        <DialogDescription className="text-slate-500 font-bold text-sm">
+          {displayName || 'Gerenciamento de licenças'}
+        </DialogDescription>
+      </DialogHeader>
 
-      <div className="px-3 md:px-8 -mt-8 relative z-20 space-y-6 pb-10">
+      <div className="px-6 space-y-6 pb-10">
         {(formError || successMessage) && (
           <div className="space-y-4">
             {formError && <Alert variant="destructive" className="rounded-2xl border-none shadow-xl bg-orange-50 text-orange-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{formError}</AlertDescription></Alert>}

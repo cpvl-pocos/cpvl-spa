@@ -23,7 +23,8 @@ export const API = {
   resetPassword: 'users/reset-password',
   emergencyContacts: 'emergency-contacts',
   licenseData: 'license-data',
-  updateProfile: 'pilots/me/profile'
+  updateProfile: 'pilots/me/profile',
+  mail: 'mail'
 } as const;
 
 

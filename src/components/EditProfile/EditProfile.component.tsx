@@ -6,6 +6,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { IMaskInput } from 'react-imask';
 import { useFetch } from '@/hooks';
@@ -192,18 +193,17 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
   return (
     <div className="p-0 space-y-0 animate-in fade-in duration-500 w-full max-w-4xl mx-auto overflow-y-auto max-h-[90vh] scrollbar-thin">
-      <div className="relative overflow-hidden bg-slate-900 sm:rounded-[2rem] p-6 md:p-8 text-white shadow-2xl">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -mr-32 -mt-32" />
-        <div className="relative z-10 flex items-end gap-4">
-          <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl"><UserIcon size={24} className="text-blue-400" /></div>
-          <div>
-            <h2 className="text-xl md:text-2xl font-black tracking-tight">Editar Cadastro</h2>
-            <p className="text-slate-400 font-bold text-[10px] tracking-wide uppercase">{formState.name || 'Perfil do Piloto'}</p>
-          </div>
-        </div>
-      </div>
+      <DialogHeader className="p-6 pb-2">
+        <DialogTitle className="text-xl font-black tracking-tight flex items-center gap-2">
+          <UserIcon size={20} className="text-blue-400" />
+          Editar Cadastro
+        </DialogTitle>
+        <DialogDescription className="text-slate-500 font-bold text-sm">
+          {formState.name || 'Perfil do Piloto'}
+        </DialogDescription>
+      </DialogHeader>
 
-      <div className="px-3 md:px-8 -mt-8 relative z-20 space-y-6 pb-10">
+      <div className="px-6 space-y-6 pb-10">
         {(formError || successMessage || errors.length > 0) && (
           <div className="space-y-3">
             {formError && <Alert variant="destructive" className="rounded-2xl border-none shadow-lg bg-orange-50 text-orange-600"><AlertCircle className="h-4 w-4" /><AlertDescription className="font-bold text-xs">{formError}</AlertDescription></Alert>}
