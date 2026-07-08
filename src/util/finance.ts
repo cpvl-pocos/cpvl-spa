@@ -26,7 +26,7 @@ export const calculateFinancialSummary = (payments: IPaymentMonthly[]) => {
 };
 
 /**
- * Groups contiguous unpaid months into batches of at least 3 for bulk confirmation
+ * Groups contiguous unpaid months into batches of at least 2 for bulk confirmation
  */
 export const groupPaymentsByBatch = (payments: IPaymentMonthly[]): IPaymentMonthly[][] => {
   const groups: IPaymentMonthly[][] = [];
@@ -49,11 +49,11 @@ export const groupPaymentsByBatch = (payments: IPaymentMonthly[]): IPaymentMonth
     ) {
       currentGroup.push(p);
     } else {
-      if (currentGroup.length >= 3) groups.push(currentGroup);
+      if (currentGroup.length >= 2) groups.push(currentGroup);
       currentGroup = [p];
     }
   }
-  if (currentGroup.length >= 3) groups.push(currentGroup);
+  if (currentGroup.length >= 2) groups.push(currentGroup);
   
   return groups;
 };
