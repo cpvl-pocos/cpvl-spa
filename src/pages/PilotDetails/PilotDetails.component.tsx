@@ -252,8 +252,8 @@ export const PilotDetails = () => {
 
         {/* Payments Section */}
         <div className="xl:col-span-2">
-          <Card className="rounded-[40px] border-none shadow-[0_20px_60px_rgba(0,0,0,0.05)] bg-white/70 backdrop-blur-xl overflow-hidden min-h-[600px]">
-            <CardHeader className="px-8 border-b border-white/50 bg-white/30">
+          <Card className="rounded-[40px] border-none shadow-[0_20px_60px_rgba(0,0,0,0.05)] bg-white/70 backdrop-blur-xl overflow-hidden min-height-600px">
+            <CardHeader className="px-9 py-6 border-b border-white/50 bg-white/30">
               <div className="flex items-center gap-4 text-primary">
                 <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-white font-black shadow-lg shadow-primary/20">
                   $
@@ -261,7 +261,7 @@ export const PilotDetails = () => {
                 <CardTitle className="text-2xl font-black tracking-tight">Histórico de Mensalidades</CardTitle>
               </div>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="p-6">
               <div className="p-2 sm:p-4">
                 <PaymentMonthly
                   initialPayments={pilot.paymentMonthlies}
