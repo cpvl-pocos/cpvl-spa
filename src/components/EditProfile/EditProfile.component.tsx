@@ -275,7 +275,9 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
           <div className="flex gap-4 pt-6">
             {onClose && <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black text-slate-400 cursor-pointer">VOLTAR</Button>}
-            <Button type="submit" disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black shadow-xl bg-primary hover:bg-primary/90 cursor-pointer">{isSubmitting ? <Spinner className="mr-2 h-4 w-4" /> : <Save className="mr-2 h-5 w-5" />}SALVAR ALTERAÇÕES</Button>
+            <Button type="submit" disabled={isSubmitting} className="flex-1 rounded-2xl h-12 font-black shadow-xl bg-primary hover:bg-primary/90 cursor-pointer">{isSubmitting ? <Spinner className="mr-2 h-4 w-4" /> : <Save className="mr-2 h-5 w-5" />}
+            
+             ALTERAÇÕES</Button>
           </div>
         </form>
       </div>
