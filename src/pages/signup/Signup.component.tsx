@@ -219,9 +219,30 @@ export const Signup: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
+
+    let finalValue = value;
+
+    // Campos de texto: trim()
+    if (['name', 'email', 'password', 'confirmPassword'].includes(name)) {
+      finalValue = value.trim();
+    }
+
+    // Nome: titlecase
+    if (name === 'name') {
+      finalValue = finalValue
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+    }
+
+    // Email: lowercase
+    if (name === 'email') {
+      finalValue = finalValue.toLowerCase();
+    }
+
     setFormState((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox' ? checked : finalValue
     }));
 
     setFormError(undefined);

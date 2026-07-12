@@ -110,8 +110,14 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
   useEffect(() => {
     if (pilotData) {
+      const fullName = `${pilotData.firstName || ''} ${pilotData.lastName || ''}`.trim();
+      const titledName = fullName
+        .split(' ')
+        .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+
       setFormState({
-        name: `${pilotData.firstName || ''} ${pilotData.lastName || ''}`.trim(),
+        name: titledName,
         cpf: pilotData.cpf || '',
         cellphone: pilotData.cellphone || '',
         email: pilotData.email || '',
@@ -151,7 +157,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
     try {
       await doUpdateProfile({
         url: getURI(API.updateProfile),
-        body: { name, cellphone: cleanedCellphone, email: email.trim().toLowerCase(), photoUrl: formState.photoUrl }
+        body: { name: name, cellphone: cleanedCellphone, email: email.trim().toLowerCase(), photoUrl: formState.photoUrl }
       });
 
       setSuccessMessage('Cadastro atualizado com sucesso!');
@@ -165,7 +171,25 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormState(prev => ({ ...prev, [name]: value }));
+
+    let finalValue = value;
+
+    if (['name', 'email'].includes(name)) {
+      finalValue = value.trim();
+    }
+
+    if (name === 'name') {
+      finalValue = finalValue
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+    }
+
+    if (name === 'email') {
+      finalValue = finalValue.toLowerCase();
+    }
+
+    setFormState(prev => ({ ...prev, [name]: finalValue }));
     setFormError(undefined);
     setErrors([]);
   };
