@@ -9,15 +9,11 @@ export const Missao = () => {
             <span className="text-primary">Missão</span>
           </h2>
           <p className="space-y-4 text-lg text-muted-foreground text-justify font-body leading-relaxed max-w-6xl sm:mx-6 mx-auto mb-12">
-            O Clube Poçoscaldense de Voo Livre, designado pela sigla CPVL, fundado em 2 de fevereiro de 1996, é uma associação civil de direito privado, sem fins lucrativos e de caráter esportivo, com sede e foro na cidade de Poços de Caldas, Estado de Minas Gerais, constituída por prazo indeterminado e com personalidade jurídica distinta da de seus associados. Tem como atividade principal a prática do desporto de voo livre.
+            A missão do Clube Poçoscaldense de Voolivre (CPVL) é promover, desenvolver e incentivar o desporto de voolivre nas modalidades de asa delta e parapente.
           </p>
 
           <p className="space-y-4 text-lg text-muted-foreground text-justify font-body leading-relaxed max-w-6xl sm:mx-6 mx-auto mb-12">
-            O CPVL, nos termos do art. 217, inciso I, da Constituição Federal e dos arts. 26, 27 e 28 da Lei nº 14.597/2023, goza de autonomia perante o Poder Público no que se refere à sua organização, gestão, administração e regulamentação, observando exclusivamente as normas nacionais e internacionais e as regras de prática esportiva aplicáveis ao voo livre.
-          </p>
-
-          <p className="space-y-4 text-lg text-muted-foreground text-justify font-body leading-relaxed max-w-6xl sm:mx-6 mx-auto mb-12">
-            O CPVL é formado por atletas de voo livre nas modalidades de Asa Delta e Parapente e tem por finalidade proporcionar aos seus associados a prática de atividades esportivas, sociais, educacionais e recreativas relacionadas ao voo livre nessas modalidades.
+            O clube atua para congregar atletas e proporcionar aos seus sócios um ambiente completo para a prática segura de atividades esportivas, recreativas, educacionais e sociais.
           </p>
         </ScrollReveal>
       </div>
