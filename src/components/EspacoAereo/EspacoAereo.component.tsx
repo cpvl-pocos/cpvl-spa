@@ -51,7 +51,7 @@ export const EspacoAereo = () => {
           className="absolute -top-[15%] left-0 w-full h-[130%] object-cover will-change-transform transition-transform duration-75 ease-out"
           style={{ transform: `translate3d(0, ${offset}px, 0)` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background" />
+        <div className="absolute inset-0 bg-linear-to-b from-background/30 via-transparent to-background" />
         <div className="absolute inset-0 flex items-center justify-center">
           <ScrollReveal>
             <h2 className="text-3xl sm:text-5xl font-heading font-bold text-white drop-shadow-lg text-center">
@@ -66,11 +66,11 @@ export const EspacoAereo = () => {
         <div className="container mx-auto max-w-6xl">
           <ScrollReveal>
             <div className="max-w-3xl mx-auto text-center mb-12 space-y-4 font-body text-muted-foreground">
-              <p>
+              <p className="space-y-4 text-lg text-muted-foreground text-justify font-body leading-relaxed max-w-6xl sm:mx-6 mx-auto mb-12">
                 Desde 1986, o Código Brasileiro de Aeronáutica estabelece que o aerodesporto deverá ser
                 praticado em áreas determinadas pela autoridade aeronáutica.
               </p>
-              <p>
+              <p className="space-y-4 text-lg text-muted-foreground text-justify font-body leading-relaxed max-w-6xl sm:mx-6 mx-auto mb-12">
                 A prática só é regular quando realizada dentro do Espaço Aéreo Condicionado (EAC), em
                 áreas estabelecidas pelo DECEA.
               </p>

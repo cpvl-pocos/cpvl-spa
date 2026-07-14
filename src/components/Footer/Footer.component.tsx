@@ -8,9 +8,9 @@ export const Footer = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Logo & copyright */}
           <div className="space-y-4">
-            <img 
-              src={logo} 
-              alt="CPVL" 
+            <img
+              src={logo}
+              alt="CPVL"
               className="h-21 w-auto transition-all duration-500 dark:brightness-0 dark:invert" 
             />
             <p className="text-sm text-muted-foreground font-body">
@@ -25,10 +25,9 @@ export const Footer = () => {
             </h4>
             <ul className="space-y-2 text-sm font-body text-muted-foreground">
               <li><a href="#historia" className="hover:text-primary transition-colors">Nossa História</a></li>
+              <li><a href="#missao" className="hover:text-primary transition-colors">Missão</a></li>
               <li><a href="#diretoria" className="hover:text-primary transition-colors">Diretoria</a></li>
               <li><a href="#espaco-aereo" className="hover:text-primary transition-colors">Espaço Aéreo</a></li>
-              <li><a href="#estatuto" className="hover:text-primary transition-colors">Estatuto</a></li>
-              <li><a href="#regimento" className="hover:text-primary transition-colors">Regimento Interno</a></li>
             </ul>
           </div>
 

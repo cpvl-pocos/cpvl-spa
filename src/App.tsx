@@ -15,14 +15,15 @@ import { PilotDetails } from "./pages/PilotDetails/";
 import { Pilots } from "./pages/Pilots/";
 import { StatusList } from "./pages/StatusList/";
 import { PaymentMonthly } from "./components/PaymentMonthly/";
-import { Footer } from "./components/Footer/";
-import { Hero } from "./components/Hero/";
-import { Diretoria } from "./components/Diretoria/";
-import { Documentos } from "./components/Documentos/";
-import { EspacoAereo } from "./components/EspacoAereo/";
+
 import { Header } from "./components/Header/";
 import { Historia } from "./components/Historia/";
+import { Missao } from "./components/Missao/";
+import { Diretoria } from "./components/Diretoria/";
+import { EspacoAereo } from "./components/EspacoAereo/";
+import { Hero } from "./components/Hero/";
 import { Home } from "./pages/Home/";
+import { Footer } from "./components/Footer/";
 
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "next-themes";
@@ -40,9 +41,9 @@ const App = () => (
             <Route path="/header" element={<Header />} />
             <Route path="/hero" element={<Hero />} />
             <Route path="/historia" element={<Historia />} />
+            <Route path="/missao" element={<Missao />} />
             <Route path="/diretoria" element={<Diretoria />} />
-            <Route path="/espacoAereo" element={<EspacoAereo />} />
-            <Route path="/documentos" element={<Documentos />} />
+            <Route path="/espacoAereo" element={<EspacoAereo />} />            
             <Route path="/footer" element={<Footer />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

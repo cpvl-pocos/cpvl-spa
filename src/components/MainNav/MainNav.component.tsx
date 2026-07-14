@@ -6,7 +6,8 @@ import {
   LayoutDashboard,
   Sun,
   Moon,
-  Coffee
+  Coffee,
+  FileText
 } from 'lucide-react';
 import type { IAllowedRoutes, IPilot, IUser } from '@/types';
 import {
@@ -85,6 +86,19 @@ const MainNav = ({ onLogout, onNav, allowedRoutes, userData }: IProps) => {
                       {route.label}
                     </DropdownMenuItem>
                   ))}
+                  <DropdownMenuSeparator className="bg-border" />
+                  <DropdownMenuItem asChild className="px-4 py-3 cursor-pointer hover:bg-primary/20 hover:text-primary focus:bg-primary/20 focus:text-primary rounded-lg transition-colors mx-1 font-bold">
+                    <a href="/docs/EstatutoCPVL_2023.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      Estatuto
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="px-4 py-3 cursor-pointer hover:bg-primary/20 hover:text-primary focus:bg-primary/20 focus:text-primary rounded-lg transition-colors mx-1 font-bold">
+                    <a href="/docs/RegimentoInternoCPVL_2024.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      Regimento Interno
+                    </a>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -126,6 +140,19 @@ const MainNav = ({ onLogout, onNav, allowedRoutes, userData }: IProps) => {
                       {route.label}
                     </DropdownMenuItem>
                   ))}
+                  <DropdownMenuSeparator className="bg-border" />
+                  <DropdownMenuItem asChild className="px-4 py-3 font-bold">
+                    <a href="/docs/EstatutoCPVL_2023.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      Estatuto
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="px-4 py-3 font-bold">
+                    <a href="/docs/RegimentoInternoCPVL_2024.pdf" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2">
+                      <FileText className="w-4 h-4" />
+                      Regimento Interno
+                    </a>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-border" />
                   <DropdownMenuItem onClick={onLogout} className="px-4 py-3 text-destructive focus:text-destructive font-bold">
                     <LogOut className="w-4 h-4 mr-2" /> Sair
