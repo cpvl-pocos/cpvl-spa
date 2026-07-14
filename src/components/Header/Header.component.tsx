@@ -6,10 +6,9 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const navLinks = [
   { label: "História", href: "#historia" },
+  { label: "Missão", href: "#missao" },
   { label: "Diretoria", href: "#diretoria" },
   { label: "Espaço Aéreo", href: "#espaco-aereo" },
-  { label: "Estatuto", href: "#estatuto" },
-  { label: "Regimento", href: "#regimento" },
 ];
 
 export const Header = () => {

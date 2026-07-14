@@ -3,9 +3,10 @@ import { Hero } from "@/components/Hero/";
 import { Historia } from "@/components/Historia/";
 import { Diretoria } from "@/components/Diretoria/";
 import { EspacoAereo } from "@/components/EspacoAereo/";
-import { Documentos } from "@/components/Documentos/";
+import { Missao } from "@/components/Missao/";
 import { Footer } from "@/components/Footer/";
 import { useSEO } from "@/hooks/useSEO";
+
 
 export const Home = () => {
   useSEO({
@@ -19,9 +20,9 @@ export const Home = () => {
       <Header />
       <Hero />
       <Historia />
+      <Missao />
       <Diretoria />
       <EspacoAereo />
-      <Documentos />
       <Footer />
     </div>
   );

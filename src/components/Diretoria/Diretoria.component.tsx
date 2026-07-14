@@ -42,12 +42,12 @@ const gestoes: Gestao[] = [
 export const Diretoria = () => {
   return (
     <section id="diretoria" className="section-padding bg-muted">
-      <div className="container mx-auto max-w-6xl">
+      <div className="container mx-auto max-w-6xl px-6">
         <ScrollReveal>
           <h2 className="text-3xl sm:text-4xl font-heading font-bold text-foreground mb-4 text-center">
             <span className="text-primary">Diretoria</span>
           </h2>
-          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12 font-body">
+          <p className="space-y-4 text-lg text-muted-foreground text-justify font-body leading-relaxed max-w-4xl sm:mx-6 mx-auto mb-12">
             Conheça os membros dedicados que lideram o CPVL, garantindo a segurança, o desenvolvimento
             e a transparência do nosso clube.
           </p>

@@ -1,0 +1,1 @@
+export { Missao } from "./Missao.component";
