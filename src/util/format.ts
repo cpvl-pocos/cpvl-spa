@@ -37,6 +37,9 @@ export const normalizeString = (v: any): string =>
 export const capitalize = (s: string): string =>
   s.charAt(0).toUpperCase() + s.slice(1);
 
+export const titleCase = (s: string): string =>
+  s.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+
 /**
  * Returns the name of the month (1-indexed)
  */

@@ -28,7 +28,7 @@ import { EditProfile } from '@/components/EditProfile';
 import { EmergencyContact } from '@/components/EmergencyContact';
 import { LicenseData } from '@/components/LicenseData';
 import { Enrollment } from '@/components/Enrollment';
-import { formatPhone } from '@/util/format';
+import { formatPhone, titleCase } from '@/util/format';
 import type { IPilot } from '@/types';
 
 export const PilotDetails = () => {
@@ -106,7 +106,7 @@ export const PilotDetails = () => {
                 <ArrowLeft className="w-5 h-5 text-slate-600" />
               </Button>
             )}
-            {pilot.firstName} {pilot.lastName}
+            {pilot.firstName} {titleCase(pilot.lastName)}
           </h1>
         </div>
 
@@ -144,7 +144,7 @@ export const PilotDetails = () => {
                 </AvatarFallback>
               </Avatar>
 
-              <h2 className="text-2xl font-black text-slate-900 mb-1 leading-tight">{pilot.firstName} {pilot.lastName}</h2>
+              <h2 className="text-2xl font-black text-slate-900 mb-1 leading-tight">{pilot.firstName} {titleCase(pilot.lastName)}</h2>
               <p className="text-slate-400 font-bold text-sm uppercase tracking-widest mb-6 border-b border-primary/5 pb-4 w-full">Pilot ID #{pilot.userId}</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 mt-0 w-full text-center">
