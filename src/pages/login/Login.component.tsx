@@ -99,7 +99,7 @@ export const Login = () => {
       const result = await response.json();
       if (response.ok) {
         setFeedback({
-          message: "Link de recuperação enviado! Verifique seu E-mail.",
+          message: "Verifique seu E-mail. Link de recuperação enviado!",
           type: "success",
         });
         setTimeout(() => {
