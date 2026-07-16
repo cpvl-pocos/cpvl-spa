@@ -67,7 +67,7 @@ export const Newpassword = () => {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center p-4 animate-in fade-in duration-700">
-      <Card className="w-full max-w-md border-none shadow-[0_20px_60px_rgba(0,0,0,0.1)] rounded-[32px] overflow-hidden bg-white/80 backdrop-blur-xl">
+      <Card className="w-full max-w-md border-none shadow-[0_20px_60px_rgba(0,0,0,0.1)] rounded-4xl overflow-hidden bg-white/80 backdrop-blur-xl">
         <div className="h-2 bg-primary w-full" />
         <CardHeader className="text-center pt-10 px-8 pb-4">
           <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mx-auto mb-6 shadow-sm">
